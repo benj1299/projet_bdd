@@ -3,8 +3,12 @@ import java.io.RandomAccessFile;
 
 public class DBManager {
 	
-	private DBDef dbdef = new DBDef();
+	private DBDef dbdef;
 	private String[] args;
+	
+	public DBManager() {
+		this.dbdef = new DBDef();
+	}
 	
 	public void init() {
 		this.dbdef.init();
