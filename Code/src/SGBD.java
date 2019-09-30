@@ -1,14 +1,13 @@
 import java.util.Scanner; 
 
 public class SGBD {
-
-	private boolean inProgress = true;
 	
 	public static void main(String[] args) {
 		
 		DBManager sgbd = new DBManager();
 		Scanner scan = new Scanner(System.in);
 		StringBuffer chaine = new StringBuffer();
+		boolean inProgress = true;
 		
 		sgbd.init();
 		
