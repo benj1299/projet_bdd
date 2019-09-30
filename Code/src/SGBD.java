@@ -4,19 +4,19 @@ public class SGBD {
 	
 	public static void main(String[] args) {
 		
-		DBManager sgbd = new DBManager();
+		DBManager dbmanager = new DBManager();
 		Scanner scan = new Scanner(System.in);
-		StringBuffer chaine = new StringBuffer();
+		String chaine;
 		boolean inProgress = true;
 		
-		sgbd.init();
+		dbmanager.init();
 		
 		while(inProgress) 
 		{
-			chaine.append(scan.next());
-			inProgress = sgbd.ProcessCommand(chaine);
+			chaine = scan.next();
+			inProgress = dbmanager.ProcessCommand(chaine);
 		}
 		
-		sgbd.finish();
+		dbmanager.finish();
 	}
 }
