@@ -2,14 +2,19 @@ import java.io.FileNotFoundException;
 import java.io.RandomAccessFile;
 
 public class DBManager {
-	private static  DBManager instance = new DBManager();
-
 	
+	private static DBManager instance = new DBManager();
 	private DBDef dbdef;
 	private String[] args;
 	
 	public DBManager() {
 		this.dbdef = new DBDef();
+	}
+	
+	public static DBManager getInstance(){
+	    if(instance == null)
+	    	instance = new DBManager();
+	    return instance;
 	}
 	
 	public void init() {
@@ -20,7 +25,10 @@ public class DBManager {
 		this.dbdef.finish();
 	}
 	
-	public Boolean processCommand(String chaine) {
+	/**
+	 * Parse la chaine des commandes et redirige vers la fonction correspondante
+	 */
+	public boolean processCommand(String chaine) {
 		this.args = chaine.split(" ");
 		
 		if(this.args[0].contentEquals("exit")) {
@@ -34,6 +42,9 @@ public class DBManager {
 		return true;
 	}
 	
+	/**
+	 * Créé une relation
+	 */
 	public void createRelation(String name, int nbColumn, String [] typeColumn){
 		try {
 			RandomAccessFile file = new RandomAccessFile(args[1]+".txt", "rw");
@@ -43,11 +54,4 @@ public class DBManager {
 			e.printStackTrace();
 		}
 	}
-	  public static DBManager getInstance(){
-	    if(instance == null)
-	    	instance = new DBManager();
-	    return instance;
-	  }
-		   
-		  
 }

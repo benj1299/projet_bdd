@@ -1,6 +1,7 @@
 import java.util.Vector;
 
 public class DBDef {
+	
 	private Vector<RelDef> tabRelDef;
 	private int count;
 	
@@ -17,29 +18,47 @@ public class DBDef {
 		
 	}
 	
+	/**
+	 * Ajoute un element à la liste vector et incrémente count
+	 * @param x
+	 */
 	public void addRelation(RelDef x) {
 		this.tabRelDef.addElement(x);
 		this.count++;
-		
 	}
 
+	// Getters / Setters
+	
+	/**
+	 * 
+	 * @return Vector
+	 */
 	public Vector<RelDef> getTabRelDef() {
-		return tabRelDef;
+		return this.tabRelDef;
 	}
 
+	/**
+	 * 
+	 * @param tabRelDef
+	 */
 	public void setTabRelDef(Vector<RelDef> tabRelDef) {
 		this.tabRelDef = tabRelDef;
 	}
 
+	/**
+	 * 
+	 * @return int
+	 */
 	public int getCount() {
-		return count;
+		return this.count;
 	}
 
+	/**
+	 * 
+	 * @param count
+	 */
 	public void setCount(int count) {
 		this.count = count;
-	}
-	
-
-	
+	}	
 }
 	
