@@ -45,10 +45,12 @@ public class DBManager {
 	/**
 	 * Créé une relation
 	 */
-	public void createRelation(String name, int nbColumn, String [] typeColumn){
+	public void createRelation(String name, int nbColumn, String... typeColumns){
 		try {
 			RandomAccessFile file = new RandomAccessFile(args[1]+".txt", "rw");
-			
+			for(String typeColumn : typeColumns) {
+				// Ajout des types de colonnes dans le fichier
+			}
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
