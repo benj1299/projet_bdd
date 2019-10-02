@@ -17,6 +17,7 @@ public class SGBD {
 			inProgress = dbmanager.processCommand(chaine);
 		}
 		
+		scan.close();
 		dbmanager.finish();
 	}
 }
