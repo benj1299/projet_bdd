@@ -1,6 +1,9 @@
 
 public class PageId {
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 1547a0d2d19c93dbadaea2ebd719cef95bf40c27
 	private int fileIdx; 
 	private int pageIdx;
 	
