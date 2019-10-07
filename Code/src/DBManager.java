@@ -11,6 +11,10 @@ public class DBManager {
 		this.dbdef = new DBDef();
 	}
 	
+	/**
+	 * Singleton retournant l'instance unique de DBManager
+	 * @return DBManager
+	 */
 	public static DBManager getInstance(){
 	    if(instance == null)
 	    	instance = new DBManager();
@@ -27,6 +31,9 @@ public class DBManager {
 	
 	/**
 	 * Parse la chaine des commandes et redirige vers la fonction correspondante
+	 * 
+	 * @param chaine - Exemple : create NomRelation NbCol TypeColl[1] TypeCol[2] ... TypeCol[NbCol]
+	 * @return boolean
 	 */
 	public boolean processCommand(String chaine) {
 		this.args = chaine.split(" ");
@@ -43,9 +50,15 @@ public class DBManager {
 	}
 	
 	/**
-	 * Créé une relation
+	 * Créé une relation via un fichier Binaire RandomAccessFile 
+	 * 
+	 * @param name - Nom de la relation
+	 * @param nbColumn - Nombre de column
+	 * @param typeColumns - Tableau de tous les types de colonnes
+	 * 
+	 * @return void
 	 */
-	public void createRelation(String name, int nbColumn, String... typeColumns){
+	public void createRelation(String name, int nbColumn, String[] typeColumns){
 		try {
 			RandomAccessFile file = new RandomAccessFile(args[1]+".txt", "rw");
 			for(String typeColumn : typeColumns) {
