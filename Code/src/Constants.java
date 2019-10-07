@@ -1,5 +1,6 @@
 
 public final class Constants {
-    final int PAGE_SIZE = 4096;
-    final String DB_DIRECTORY = "../DB/";
+    final public byte PAGE_SIZE = 4096;
+    final public String DB_DIRECTORY = "../DB/";
+    final public int FRAME_COUNT = 2;
 }

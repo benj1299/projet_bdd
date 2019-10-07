@@ -5,8 +5,7 @@ public class DBManager {
 	
 	private static DBManager instance = new DBManager();
 	private DBDef dbdef;
-	private String[] args;
-	
+
 	public DBManager() {
 		this.dbdef = new DBDef();
 	}
@@ -36,9 +35,9 @@ public class DBManager {
 	 * @return boolean
 	 */
 	public boolean processCommand(String chaine) {
-		this.args = chaine.split(" ");
+		String[] args = chaine.split(" ");
 		
-		if(this.args[0].contentEquals("exit")) {
+		if(args[0].contentEquals("exit")) {
 			return false;
 		}
 
@@ -59,14 +58,6 @@ public class DBManager {
 	 * @return void
 	 */
 	public void createRelation(String name, int nbColumn, String[] typeColumns){
-		try {
-			RandomAccessFile file = new RandomAccessFile(args[1]+".txt", "rw");
-			for(String typeColumn : typeColumns) {
-				// Ajout des types de colonnes dans le fichier
-			}
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		
 	}
 }
