@@ -2,6 +2,11 @@ import java.io.File;
 import java.io.RandomAccessFile;
 
 public class DiskManager {
+    
+
+    public DiskManager(){
+
+    }
 
     /**
      * Créer un fichier data_file_idx.rf dans le DIRECTORY_DB
@@ -28,8 +33,7 @@ public class DiskManager {
      * @return PageId
      */
     public PageId addPage(int fileIdx) {
-        String fileName = "Data_" + fileIdx + ".rf";
-        File file = new File(Constants.DIRECTORY_DB + fileName);
+        File file = this.getNamePage(fileIdx);
         
         if(!file.exists()){ 
             // Lever une erreur et interrompre
@@ -51,15 +55,29 @@ public class DiskManager {
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
      */
-    public void readPage(pageId pageId, byte []buff ) {}
+    public void readPage(PageId pageId, byte[] buff) {
+      File file = this.getNamePage(pageId.getFileIdx());
+      file.seek(pageId.getPageIdx() * Constants.PAGE_SIZE);
+      
+      for(int i = 0; i < Constants.PAGE_SIZE; i++){
+        file.readByte();
+      }
+    }
 
     /**
      * Ecrit le contenu de l'argument buff dans le fichier et à la position indiquée par l'argument pageId
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
      */
-    public void writePage(pageId pageId, byte []buff) {}
+    public void writePage(pageId pageId, byte []buff) {
+      
+    }
 
 
+    private File getNamePage(String fileIdx){
+      String fileName = "Data_" + fileIdx + ".rf";
+      File file = new File(Constants.DIRECTORY_DB + fileName);
+      return file;
+    }
 }
 	
