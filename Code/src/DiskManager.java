@@ -2,27 +2,21 @@ import java.io.File;
 import java.io.RandomAccessFile;
 
 public class DiskManager {
-    
-
-    public DiskManager(){
-
-    }
-
     /**
      * Créer un fichier data_file_idx.rf dans le DIRECTORY_DB
      * @param fileIdx - Identifiant / indice du fichier
      */
     public void createFile(int fileIdx) {
-        String fileName = "Data_" + fileIdx + ".rf";
         try {
-            File file = new File(Constants.DIRECTORY_DB + fileName);
+            File file = this.getFile(fileIdx);
             if (file.createNewFile()) {
-              System.out.println("File created: " + file.getName());
+              System.out.println("Fichier cree: " + file.getName());
             } else {
-              System.out.println("File already exists.");
+              System.out.println("Le fichier existe deja.");
             }
+            file.close();
           } catch (IOException e) {
-            System.out.println("An error occurred.");
+            System.out.println("Une erreur est apparue.");
             e.printStackTrace();
           }
     }
@@ -33,14 +27,15 @@ public class DiskManager {
      * @return PageId
      */
     public PageId addPage(int fileIdx) {
-        File file = this.getNamePage(fileIdx);
+        File file = this.getFile(fileIdx);
         
-        if(!file.exists()){ 
-            // Lever une erreur et interrompre
+        if(!file.exists()){
+          file.close();
+          // Lever une erreur et interrompre
         }
         
         long fileSize = file.length();
-        long pageIdx = fileSize / Constants.PAGE_SIZE + 1;
+        long pageIdx = fileSize / Constants.PAGE_SIZE;
         byte space[Constants.PAGE_SIZE] = new byte[Constants.PAGE_SIZE];
 
         RandomAccessFile file = new RandomAccessFile(file, "rw");
@@ -56,12 +51,22 @@ public class DiskManager {
      * @param buff - Buffer
      */
     public void readPage(PageId pageId, byte[] buff) {
-      File file = this.getNamePage(pageId.getFileIdx());
-      file.seek(pageId.getPageIdx() * Constants.PAGE_SIZE);
+      File file = this.getFile(pageId.getFileIdx());
+      int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
+      file.seek(pos);
       
-      for(int i = 0; i < Constants.PAGE_SIZE; i++){
-        file.readByte();
+      if(!file.canRead()){
+        file.close();
+        // Lever une erreur
       }
+
+      for(int i = 0; i < Constants.PAGE_SIZE; i++){
+        buff[] = file.readByte();
+        pos++;
+        file.seek(pos);
+      }
+
+      file.close();
     }
 
     /**
@@ -69,12 +74,30 @@ public class DiskManager {
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
      */
-    public void writePage(pageId pageId, byte []buff) {
-      
+    public void writePage(pageId pageId, byte[] buff) {
+      File file = this.getFile(pageId.getFileIdx());
+      int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
+      file.seek(pos);
+
+      if(!file.canWrite()){
+        file.close();
+        // Lever une erreur
+      }
+
+      for(int i = 0; i < Constants.PAGE_SIZE; i++){
+        file.write(buff[i]);
+        pos++;
+        file.seek(pos);
+      }
+      file.close();
     }
 
 
-    private File getNamePage(String fileIdx){
+    /**
+     * @param fileIdx
+     * @return le fichier de la page demandé selon son index
+     */
+    private File getFile(String fileIdx){
       String fileName = "Data_" + fileIdx + ".rf";
       File file = new File(Constants.DIRECTORY_DB + fileName);
       return file;

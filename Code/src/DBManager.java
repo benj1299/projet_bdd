@@ -3,13 +3,10 @@ import java.io.RandomAccessFile;
 
 public class DBManager {
 	
-	private static DBManager instance = new DBManager();
+	private static DBManager instance;
 	private DBDef dbdef;
+	private BufferManager bufferManager;
 
-	public DBManager() {
-		this.dbdef = new DBDef();
-	}
-	
 	/**
 	 * Singleton retournant l'instance unique de DBManager
 	 * @return DBManager
@@ -20,12 +17,18 @@ public class DBManager {
 	    return instance;
 	}
 	
+	public DBManager() {
+		this.dbdef = new DBDef();
+		this.bufferManager = BufferManager.getInstance();
+	}
+	
 	public void init() {
 		this.dbdef.init();
 	}
 	
 	public void finish() {
 		this.dbdef.finish();
+		this.bufferManager.flushAll();
 	}
 	
 	/**

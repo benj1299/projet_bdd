@@ -4,7 +4,7 @@ public class SGBD {
 	
 	public static void main(String[] args) {
 		
-		DBManager dbmanager = new DBManager();
+		DBManager dbmanager = DBManager.getInstance();
 		Scanner scan = new Scanner(System.in);
 		String chaine;
 		boolean inProgress = true;
