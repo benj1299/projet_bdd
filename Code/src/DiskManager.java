@@ -56,11 +56,11 @@ public class DiskManager {
      */
     public void readPage(PageId pageId, byte[] buff) {
       RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "r");
-      int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
+      long pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
       file.seek(pos);
      
       for(int i = 0; i < Constants.PAGE_SIZE; i++){
-        buff[] = file.readByte();
+        buff[i] = file.readByte();
         pos++;
         file.seek(pos);
       }
@@ -74,15 +74,12 @@ public class DiskManager {
      * @param buff - Buffer
      */
     public void writePage(PageId pageId, byte[] buff) {
-        RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "r");
-        int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
-        file.seek(pos);
-       
-        for(int i = 0; i < Constants.PAGE_SIZE; i++){
-          
-        }
-
-        file.close();
+    	int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
+        RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "rw");  
+        file.seek(pos); 
+        file.write(buff);  
+        file.close();  
+    		
       }
 
     /**
