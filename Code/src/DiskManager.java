@@ -73,23 +73,22 @@ public class DiskManager {
 	      	pos++;
 	      	file.seek(pos);
 	      }
-	
 	      file.close();
       } 
       catch(IOException e) {
-  		System.out.println("Impossible de lire la page, une erreur s'est produite.");
-      }	
-    	
+    	new Exception("Impossible de lire la page, une erreur s'est produite.");
+      }	    	
     }
     
     /**
      * Ecrit le contenu de l'argument buff dans le fichier et à la position indiquée par l'argument pageId
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
+     * @throws Exception 
      */
-    public void writePage(PageId pageId, byte[] buff) {
+    public void writePage(PageId pageId, byte[] buff) throws Exception {
     	if(buff.length > Constants.PAGE_SIZE) {
-    		// Lever une Exception
+    		throw new Exception("Longueur du buffer superieur a la longueur maximum autorise");
     	}
     	try {
     		int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
@@ -99,9 +98,8 @@ public class DiskManager {
             file.close();  
     	} 
     	catch(IOException e) {
-      		// Gérer l'exception
+    		throw new Exception("Probleme d'ecriture fichier");
     	}
-    		
       }
 
     /**
