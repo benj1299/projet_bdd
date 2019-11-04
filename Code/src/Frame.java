@@ -4,12 +4,14 @@ public class Frame {
 	private PageId pageId;
 	private int pinCount;
 	private boolean dirty;
+	private boolean refBit;
 	private byte[] buff;
 	
-	public Frame(byte[] buff, PageId pageId, int pinCount, boolean dirty) {
+	public Frame(byte[] buff, PageId pageId) {
 		this.pageId = pageId;
-		this.pinCount = pinCount;
-		this.dirty = dirty;
+		this.pinCount = 0;
+		this.dirty = false;
+		this.refBit=false;
 		this.buff = buff;
 	}
 	
@@ -109,5 +111,16 @@ public class Frame {
 	 */
 	public void setBuff(byte[] buff) {
 		this.buff = buff;
+	}
+	/**
+	 * 
+	 * @param b the refBit to set
+	 */
+	public void setRefBit(boolean b) {
+		this.refBit = b;
+	}
+	
+	public boolean isRefBit() {
+		return this.refBit;
 	}
 }
