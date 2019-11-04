@@ -16,14 +16,14 @@ public class BufferManager {
 		return instance ;
 	}
 
-
 	/**
 	 * Rempli (ou remplace si besoin) le buffer correspondant à la bonne frame 
 	 * avec le contenu de la page désignée par l’argument pageId
 	 * @param pageId
 	 * @return un des buffers associés à une case
+	 * @throws Exception 
 	 */
-	public byte[] getPage(PageId pageId) throws BufferPoolNonLibreException {		
+	public byte[] getPage(PageId pageId) throws Exception {		
 		byte content[] = new byte[Constants.PAGE_SIZE];
 		boolean exception = true;
 
@@ -32,16 +32,15 @@ public class BufferManager {
 				x.increment();
 				return x.getBuff();		
 			}
-				
 
 		if(this.bufferPool.size() < Constants.FRAME_COUNT) {
-			
 			this.dkManager.readPage(pageId, content);
 			Frame frame = new Frame(content, pageId);
 			frame.increment();
 			this.bufferPool.add(frame);
 			return frame.getBuff();			
 		}
+		
 		else {
 			for(int i = 0 ; i<2 ; i++)
 				for(Frame x1 : this.bufferPool)
@@ -63,45 +62,47 @@ public class BufferManager {
 							exception = false;
 						}
 					}
-						
-	}
-
-	if(exception) {
-		throw new BufferPoolNonLibreException("tout les pinCount à 1 et plus de place");
-	}
-	return content;
-}
-
-/**
- * Décremente pinCount et actualise le flag dirty
- * @param pageId
- * @param valdirty
- */
-public void freePage(PageId pageId, boolean valdirty) {
-	for(Frame x : this.bufferPool) {
-		if(x.getPageId() == pageId) {
-			x.decrement();
-			x.setDirty(valdirty);
-			if(x.getPinCount() == 0) {
-				x.setRefBit(true);
-			}
 
 		}
-	}
-}
 
-/**
- * Écriture sur disk (via diskManager) des pages avec dirty = 1 
- * et remise à 0 des flags/infos/contenus des buffers
- */
-public void flushAll() {
-	for(int i = 0; i < bufferPool.size(); i++) {
-		if (bufferPool.get(i).isDirty()) {
-			this.dkManager.writePage(bufferPool.get(i).getPageId(), bufferPool.get(i).getBuff());
-			bufferPool.get(i).initFlags();
-		}	
-		bufferPool.get(i).initFlags(); // pas sur
+		if(exception) {
+			throw new BufferPoolNonLibreException("tout les pinCount à 1 et plus de place");
+		}
+		
+		return content;
 	}
-}
+
+	/**
+	 * Décremente pinCount et actualise le flag dirty
+	 * @param pageId
+	 * @param valdirty
+	 */
+	public void freePage(PageId pageId, boolean valdirty) {
+		for(Frame x : this.bufferPool) {
+			if(x.getPageId() == pageId) {
+				x.decrement();
+				x.setDirty(valdirty);
+				if(x.getPinCount() == 0) {
+					x.setRefBit(true);
+				}
+
+			}
+		}
+	}
+
+	/**
+	 * Écriture sur disk (via diskManager) des pages avec dirty = 1 
+	 * et remise à 0 des flags/infos/contenus des buffers
+	 * @throws Exception 
+	 */
+	public void flushAll() throws Exception {
+		for(int i = 0; i < bufferPool.size(); i++) {
+			if (bufferPool.get(i).isDirty()) {
+				this.dkManager.writePage(bufferPool.get(i).getPageId(), bufferPool.get(i).getBuff());
+				bufferPool.get(i).initFlags();
+			}	
+			bufferPool.get(i).initFlags(); // pas sur
+		}
+	}
 
 }

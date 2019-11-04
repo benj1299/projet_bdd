@@ -31,7 +31,7 @@ public class DBManager {
 		this.dbdef.init();
 	}
 	
-	public void finish() {
+	public void finish() throws Exception {
 		this.dbdef.finish();
 		this.bufferManager.flushAll();
 	}
