@@ -5,8 +5,13 @@ public class RelDef {
 	private String name;
 	private int nbColumn;
 	private static Vector<String> typeColumn;
-	
+	/*new*/ private int fileIdx;
+	/*new*/private int recordSize;
+	/*new*/private int slotCount;
 	// Getters / Setters
+	
+	
+	
 	
 	/**
 	 * @return the name
