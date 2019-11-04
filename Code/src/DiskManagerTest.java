@@ -1,12 +1,11 @@
-import java.util.Random;
-import junit.framework.*;
+import junit.framework.TestCase;
 
 public class DiskManagerTest extends TestCase {
 	
-	private int randomIndex = new Random().nextInt(1000 - 1 + 1) + 1;
-	private DiskManager dkManager = DiskManager.getInstance();
-	private PageId pageId;
-	private byte[] buff;
+	protected int randomIndex = 1000;
+	protected DiskManager dkManager = DiskManager.getInstance();
+	protected PageId pageId;
+	protected byte[] buff;
 	
 	public DiskManagerTest() {
 		this.dkManager.createFile(this.randomIndex);
