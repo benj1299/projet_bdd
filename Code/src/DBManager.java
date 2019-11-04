@@ -66,8 +66,8 @@ public class DBManager {
 	 * @return void
 	 */
 	public void createRelation(String name, int nbColumn, String[] typeColumns){
-		int recordSize ;
-		for (int i=0; i<nbColumn; i++){
+		int recordSize = 0;
+		for (int i = 0; i < nbColumn; i++){
 			if (typeColumns[i].equals("float")||typeColumns[i].equals("int")){
 				recordSize+=4;
 			}   
@@ -76,6 +76,6 @@ public class DBManager {
 				recordSize +=Integer.parseInt(mots[6]);	
 			}
 		}
-		int slotCount = pageSize/recordSize;
+		int slotCount = Constants.PAGE_SIZE/recordSize;
 	}
 }
