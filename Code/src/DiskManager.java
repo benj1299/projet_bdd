@@ -77,7 +77,7 @@ public class DiskManager {
 	      file.close();
       } 
       catch(IOException e) {
-  		// Gérer l'exception
+  		System.out.println("Impossible de lire la page, une erreur s'est produite.");
       }	
     	
     }

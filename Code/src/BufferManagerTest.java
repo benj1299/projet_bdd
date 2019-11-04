@@ -1,4 +1,3 @@
-
 import junit.framework.*;
 
 public class BufferManagerTest extends TestCase {

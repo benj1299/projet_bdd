@@ -7,13 +7,13 @@ public class BufferManager {
 
 	public static BufferManager getInstance(){
 		if (instance == null) {
-	         synchronized(BufferManager.class) {
-	            if (instance == null) {
-	               instance = new BufferManager() ;
-	            }
-	         }
-	      }
-	      return instance ;
+			synchronized(BufferManager.class) {
+				if (instance == null) {
+					instance = new BufferManager() ;
+				}
+			}
+		}
+		return instance ;
 	}
 
 
@@ -23,100 +23,81 @@ public class BufferManager {
 	 * @param pageId
 	 * @return un des buffers associés à une case
 	 */
-	public byte[] getPage(PageId pageId) throws BufferPoolNonLibreException {
-		// Verifie si la page est dans le bufferpool (bufferPool.get(i))
-		// Si c'est le cas, renvoyer la page
-		// Sinon verifier sur disk si la page y est (readPage)
-		// Si elle n'y est pas, renvoies une exception
+	public byte[] getPage(PageId pageId) throws BufferPoolNonLibreException {		
 		byte content[] = new byte[Constants.PAGE_SIZE];
 		boolean exception = true;
-		boolean present = false;
-		for(Frame x : this.bufferPool) {
-			if(x.getPageId() == pageId) {
+
+		for(Frame x : this.bufferPool)
+			if(x.getPageId() == pageId)
 				x.increment();
-				present = true;
 				return x.getBuff();		
-			}
+
+		if(this.bufferPool.size() < Constants.FRAME_COUNT) {
+			
+			this.dkManager.readPage(pageId, content);
+			Frame frame = new Frame(content, pageId);
+			frame.increment();
+			this.bufferPool.add(frame);
+			return frame.getBuff();			
 		}
-
-		if(!present) {
-			if(this.bufferPool.size() < Constants.FRAME_COUNT) {
-				DiskManager.readPage(pageId, content);
-				Frame frame = new Frame(content, pageId);
-				frame.increment();
-				this.bufferPool.add(frame);
-				return frame.getBuff();					
-
-			}
-
-			else {
-				// remplacement
-				for(int i = 0 ; i<2 ; i++) {
-
-					for(Frame x1 : this.bufferPool) {
-						if(x1.getPinCount() == 0) {
-							if(x1.isDirty()) {
-								DiskManager.writePage(x1.getPageId(), x1.getBuff());
-								x1.setDirty(false);
-							}
-
-							if(x1.isRefBit()) {
-								x1.setRefBit(false);
-							}
-
-							else {
-								this.bufferPool.remove(x1);
-								DiskManager.readPage(pageId, content);
-								Frame newFrame = new Frame(content, pageId);
-								newFrame.increment();
-								this.bufferPool.add(newFrame);
-								content = newFrame.getBuff();
-								exception = false;
-
-							}
+		else {
+			for(int i = 0 ; i<2 ; i++)
+				for(Frame x1 : this.bufferPool)
+					if(x1.getPinCount() == 0)
+						if(x1.isDirty()) {
+							this.dkManager.writePage(x1.getPageId(), x1.getBuff());
+							x1.setDirty(false);
 						}
-					}
-				}
+						if(x1.isRefBit()) {
+							x1.setRefBit(false);
+						}
+						else {
+							this.bufferPool.remove(x1);
+							this.dkManager.readPage(pageId, content);
+							Frame newFrame = new Frame(content, pageId);
+							newFrame.increment();
+							this.bufferPool.add(newFrame);
+							content = newFrame.getBuff();
+							exception = false;
+						}
+	}
+
+	if(exception) {
+		throw new BufferPoolNonLibreException("tout les pinCount à 1 et plus de place");
+	}
+	return content;
+}
+
+/**
+ * Décremente pinCount et actualise le flag dirty
+ * @param pageId
+ * @param valdirty
+ */
+public void freePage(PageId pageId, boolean valdirty) {
+	for(Frame x : this.bufferPool) {
+		if(x.getPageId() == pageId) {
+			x.decrement();
+			x.setDirty(valdirty);
+			if(x.getPinCount() == 0) {
+				x.setRefBit(true);
 			}
-		}
 
-		if(exception) {
-			throw new BufferPoolNonLibreException("tout les pinCount à 1 et plus de place");
-
-		}
-		return content;
-	}
-
-	/**
-	 * Décremente pinCount et actualise le flag dirty
-	 * @param pageId
-	 * @param valdirty
-	 */
-	public void freePage(PageId pageId, boolean valdirty) {
-		for(Frame x : this.bufferPool) {
-			if(x.getPageId() == pageId) {
-				x.decrement();
-				x.setDirty(valdirty);
-				if(x.getPinCount() == 0) {
-					x.setRefBit(true);
-				}
-
-			}
 		}
 	}
+}
 
-	/**
-	 * Écriture sur disk (via diskManager) des pages avec dirty = 1 
-	 * et remise à 0 des flags/infos/contenus des buffers
-	 */
-	public void flushAll() {
-		for(int i = 0; i < bufferPool.size(); i++) {
-			if (bufferPool.get(i).isDirty()) {
-				dkManager.writePage(bufferPool.get(i).getPageId(), bufferPool.get(i).getBuff());
-				bufferPool.get(i).initFlags();
-			}	
-			bufferPool.get(i).initFlags(); // pas sur
-		}
+/**
+ * Écriture sur disk (via diskManager) des pages avec dirty = 1 
+ * et remise à 0 des flags/infos/contenus des buffers
+ */
+public void flushAll() {
+	for(int i = 0; i < bufferPool.size(); i++) {
+		if (bufferPool.get(i).isDirty()) {
+			this.dkManager.writePage(bufferPool.get(i).getPageId(), bufferPool.get(i).getBuff());
+			bufferPool.get(i).initFlags();
+		}	
+		bufferPool.get(i).initFlags(); // pas sur
 	}
+}
 
 }
