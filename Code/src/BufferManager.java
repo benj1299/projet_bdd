@@ -28,9 +28,11 @@ public class BufferManager {
 		boolean exception = true;
 
 		for(Frame x : this.bufferPool)
-			if(x.getPageId() == pageId)
+			if(x.getPageId() == pageId) {
 				x.increment();
 				return x.getBuff();		
+			}
+				
 
 		if(this.bufferPool.size() < Constants.FRAME_COUNT) {
 			
@@ -43,7 +45,7 @@ public class BufferManager {
 		else {
 			for(int i = 0 ; i<2 ; i++)
 				for(Frame x1 : this.bufferPool)
-					if(x1.getPinCount() == 0)
+					if(x1.getPinCount() == 0) {
 						if(x1.isDirty()) {
 							this.dkManager.writePage(x1.getPageId(), x1.getBuff());
 							x1.setDirty(false);
@@ -60,6 +62,8 @@ public class BufferManager {
 							content = newFrame.getBuff();
 							exception = false;
 						}
+					}
+						
 	}
 
 	if(exception) {
