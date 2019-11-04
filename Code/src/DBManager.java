@@ -12,9 +12,14 @@ public class DBManager {
 	 * @return DBManager
 	 */
 	public static DBManager getInstance(){
-	    if(instance == null)
-	    	instance = new DBManager();
-	    return instance;
+		if (instance == null) {
+	         synchronized(DBManager.class) {
+	            if (instance == null) {
+	               instance = new DBManager() ;
+	            }
+	         }
+	      }
+	      return instance ;
 	}
 	
 	public DBManager() {

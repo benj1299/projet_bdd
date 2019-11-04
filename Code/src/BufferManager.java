@@ -3,11 +3,17 @@ public class BufferManager {
 
 	private static BufferManager instance; 	
 	private Vector<Frame> bufferPool = new Vector<Frame>();
+	private DiskManager dkManager = DiskManager.getInstance();
 
 	public static BufferManager getInstance(){
-	    if(instance == null)
-	    	instance = new BufferManager();
-	    return instance;
+		if (instance == null) {
+	         synchronized(BufferManager.class) {
+	            if (instance == null) {
+	               instance = new BufferManager() ;
+	            }
+	         }
+	      }
+	      return instance ;
 	}
 	
 	/**
@@ -59,8 +65,8 @@ public class BufferManager {
 	 */
 	public void flushAll() {
 		for(int i = 0; i < bufferPool.size(); i++) {
-			if (bufferPool.get(i).getDirty()) {
-				DiskManager.writePage(bufferPool.get(i).getPageId(), bufferPool.get(i).getBuff());
+			if (bufferPool.get(i).isDirty()) {
+				dkManager.writePage(bufferPool.get(i).getPageId(), bufferPool.get(i).getBuff());
 				bufferPool.get(i).initFlags();
 			}	
 		}

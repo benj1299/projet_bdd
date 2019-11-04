@@ -4,12 +4,25 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class DiskManager {
+	
+	private static DiskManager instance ;
+		 
+	public static DiskManager getInstance() {
+      if (instance == null) {
+         synchronized(DiskManager.class) {
+            if (instance == null) {
+               instance = new DiskManager() ;
+            }
+         }
+      }
+      return instance ;
+   }
     /**
      * Créer un fichier data_file_idx.rf dans le DIRECTORY_DB
      * @param fileIdx - Identifiant / indice du fichier
      * @return 
      */
-    public static void createFile(int fileIdx) {
+    public void createFile(int fileIdx) {
         try {
             File file = getFile(fileIdx);
             file.createNewFile();
@@ -24,10 +37,10 @@ public class DiskManager {
      * @param fileIdx - Identifiant / indice du fichier
      * @return PageId
      */
-    public static PageId addPage(int fileIdx) {
+    public PageId addPage(int fileIdx) {
         File file = getFile(fileIdx);
         if(!file.exists()){
-          // Lever une erreur et interrompre
+        	throw new NullPointerException();
         }
         
         int fileSize = (int) file.length();
@@ -49,7 +62,7 @@ public class DiskManager {
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
      */
-    public static void readPage(PageId pageId, byte[] buff) {
+    public void readPage(PageId pageId, byte[] buff) {
       try {
     	  RandomAccessFile file = new RandomAccessFile(getFile(pageId.getFileIdx()), "r");
 	      long pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
@@ -74,7 +87,7 @@ public class DiskManager {
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
      */
-    public static void writePage(PageId pageId, byte[] buff) {
+    public void writePage(PageId pageId, byte[] buff) {
     	if(buff.length > Constants.PAGE_SIZE) {
     		// Lever une Exception
     	}
