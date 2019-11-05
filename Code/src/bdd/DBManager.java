@@ -1,4 +1,6 @@
+package bdd;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 
 public class DBManager {
@@ -27,7 +29,7 @@ public class DBManager {
 		this.bufferManager = BufferManager.getInstance();
 	}
 	
-	public void init() {
+	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
 		this.dbdef.init();
 	}
 	

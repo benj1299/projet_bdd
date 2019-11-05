@@ -1,8 +1,9 @@
+package bdd;
 import java.util.Scanner; 
 
 public class SGBD {
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
 		DBManager dbmanager = DBManager.getInstance();
 		Scanner scan = new Scanner(System.in);

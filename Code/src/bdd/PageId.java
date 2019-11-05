@@ -1,3 +1,4 @@
+package bdd;
 
 public class PageId {
 	private int fileIdx; 
