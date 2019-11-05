@@ -1,23 +1,64 @@
-package bdd;
-
 import java.io.File;
 
+
 public class HeapFile {
-
+	
+	
 	RelDef relDef;
-
-	public void createNewOnDisk() {
-		DiskManager.createFile(relDef.getfileIdx());
-		PageId headerPage = DiskManager.addPage(relDef.getfileIdx());	
-		byte[] buff =BufferManager.getPage(headerPage);
-		buff[0]=0;
-		BufferManager.freePage(headerPage, 1);
+	
+	
+	
+	
+	
+	void createNewOnDisk(){
+		
+		
+				DiskManager.createFile(relDef.getfileIdx());
+				PageId headerPage = DiskManager.addPage(relDef.getfileIdx());	
+					byte[] buff =BufferManager.getPage(headerPage);
+					
+					buff[0]=0;
+					
+					DiskManager.writePage(headerPage, buff);
+		
+					BufferManager.freePage(headerPage, 1);
+		
 	}	
 
-	public PageId addDataPage() {
+	
+	
+	PageId addDataPage(){
+		
+			
 		DiskManager.addPage(relDef.getfileIdx());
-		byte [] buff = BufferManager.getPage(0);
+		
+		PageId pid =new PageId (relDef.getfileIdx(),0);
+		
+		byte [] buff = BufferManager.getPage(pid);
 		buff[0]=+1;
-	}
-}
+		
+		DiskManager.writePage(pid, buff);
 
+		
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	//PageId  getFreeDataPageId(){	
+		
+		
+		
+		
+			
+		
+		
+		
+	
