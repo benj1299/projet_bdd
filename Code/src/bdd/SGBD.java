@@ -5,17 +5,15 @@ public class SGBD {
 	
 	public static void main(String[] args) throws Exception {
 		
+		boolean inProgress = true;
 		DBManager dbmanager = DBManager.getInstance();
 		Scanner scan = new Scanner(System.in);
-		String chaine;
-		boolean inProgress = true;
 		
 		dbmanager.init();
 		
 		while(inProgress) 
 		{
-			chaine = scan.next();
-			inProgress = dbmanager.processCommand(chaine);
+			inProgress = dbmanager.processCommand(scan.next());
 		}
 		
 		scan.close();

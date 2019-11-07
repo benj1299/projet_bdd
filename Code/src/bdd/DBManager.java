@@ -10,7 +10,7 @@ public class DBManager {
 	private BufferManager bufferManager;
 
 	/**
-	 * Singleton retournant l'instance unique de DBManager
+	 * Singleton de DBManager
 	 * @return DBManager
 	 */
 	public static DBManager getInstance(){

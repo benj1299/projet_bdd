@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 
-
 public class DBDef {
 	private static DBDef instance ;
 	 
@@ -33,13 +32,10 @@ public class DBDef {
 	}
 	
 	public void init() throws FileNotFoundException, IOException, ClassNotFoundException{
-    	
     	FileInputStream fis = new FileInputStream(Constants.DB_DIRECTORY +"Catalog.def");
     	ObjectInputStream ois = new ObjectInputStream(fis);
     	DBDef.instance = (DBDef) ois.readObject();
-    	ois.close();
-    	
-		
+    	ois.close();	
 	}
 	
 	public void finish() throws FileNotFoundException, IOException {
@@ -47,7 +43,6 @@ public class DBDef {
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(DBDef.instance);
 		oos.close();
-		
 	}
 	
 	/**
