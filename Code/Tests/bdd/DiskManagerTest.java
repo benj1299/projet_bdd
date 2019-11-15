@@ -11,34 +11,34 @@ public class DiskManagerTest {
 	protected byte[] buff;
 	
 	@Test
-	public void TestCreateFile() {
+	public final void TestCreateFile() {
 		assertDoesNotThrow(() -> this.dkManager.createFile(this.fileIndex));
 	}
 
 	@Test
-	public void TestAddPageException() {
+	public final void TestAddPageException() {
 		assertDoesNotThrow(() -> this.dkManager.addPage(this.fileIndex));	
 	}
 	
 	@Test
-	public void TestReadPageException() {
+	public final void TestReadPageException() {
 		assertDoesNotThrow(() -> this.dkManager.readPage(this.pageId, this.buff));
 	}
 	
 	@Test
-	public void TestReadPageBufferEmpty() {
+	public final void TestReadPageBufferEmpty() {
 		assertTrue(this.buff.length > 0, "Buffer non remplie pour lecture");
 	}
 	
 	@Test
-	public void TestReadPageResult() {
+	public final void TestReadPageResult() {
 		byte[] buffer = new byte[Constants.PAGE_SIZE];
 		this.dkManager.readPage(this.pageId, buffer);
 		assertEquals(this.buff, buffer);
 	}
 	
 	@Test
-	public void TestWritePageException() {
+	public final void TestWritePageException() {
 		for(int i=0; i<this.buff.length/2; i++){
 			  byte temp = this.buff[i];
 			  this.buff[i] = this.buff[this.buff.length -i -1];
@@ -48,7 +48,7 @@ public class DiskManagerTest {
 	}
 	
 	@Test
-	public void TestWritePageResult() {
+	public final void TestWritePageResult() {
 		byte[] buffer = new byte[Constants.PAGE_SIZE];
 		this.dkManager.readPage(this.pageId, buffer);
 		assertEquals(this.buff, buffer);
