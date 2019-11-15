@@ -1,4 +1,4 @@
-import java.io.File;
+package bdd;
 
 public class HeapFile {
 
@@ -13,21 +13,40 @@ public class HeapFile {
 	}
 
 	public void createNewOnDisk(){
-		this.dm.createFile(relDef.getfileIdx());
-		PageId headerPage = DiskManager.addPage(relDef.getfileIdx());	
-		byte[] buff = this.bm.getPage(headerPage);
+		this.dm.createFile(relDef.getFileIdx());
+		PageId headerPage = this.dm.addPage(relDef.getFileIdx());	
+		byte[] buff = null;
+		try {
+			buff = this.bm.getPage(headerPage);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		buff[0]=0;
-		this.dm.writePage(headerPage, buff);
-		this.bm.freePage(headerPage, 1);
+		try {
+			this.dm.writePage(headerPage, buff);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.bm.freePage(headerPage, true);
 
 	}	
 
 	public PageId addDataPage(){
-		DiskManager.addPage(relDef.getfileIdx());
-		PageId pid = new PageId (relDef.getfileIdx(),0);
-		byte [] buff = this.bm.getPage(pid);
-		buff[0]=+1;
-		this.dm.writePage(pid, buff);
+		this.dm.addPage(relDef.getFileIdx());
+		PageId pid = new PageId (relDef.getFileIdx(), 0);
+		byte[] buff = null;
+		try {
+			buff = this.bm.getPage(pid);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+		buff[0]+= 1;
+		try {
+			this.dm.writePage(pid, buff);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return pid;
 	}
-
+}
 	//PageId getFreeDataPageId()

@@ -12,9 +12,6 @@ public class RelDef {
 
 	// Getters / Setters
 	
-	
-	
-	
 	/**
 	 * @return the name
 	 */
@@ -55,6 +52,42 @@ public class RelDef {
 	 */
 	public static void setTypeColumn(Vector<String> typeColumn) {
 		RelDef.typeColumn = typeColumn;
+	}
+
+	public int getFileIdx() {
+		return this.fileIdx;
+	}
+	
+	public void setFileIdx(int fileIdx) {
+		this.fileIdx = fileIdx;
+	}
+	
+	/**
+	 * @return the recordSize
+	 */
+	public int getRecordSize() {
+		return recordSize;
+	}
+
+	/**
+	 * @param recordSize the recordSize to set
+	 */
+	public void setRecordSize(int recordSize) {
+		this.recordSize = recordSize;
+	}
+
+	/**
+	 * @return the slotCount
+	 */
+	public int getSlotCount() {
+		return slotCount;
+	}
+
+	/**
+	 * @param slotCount the slotCount to set
+	 */
+	public void setSlotCount(int slotCount) {
+		this.slotCount = slotCount;
 	}
 	
 }
