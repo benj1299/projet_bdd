@@ -12,6 +12,9 @@ public class HeapFile {
 		this.relDef = new RelDef();
 	}
 
+	/*
+	 *  Création du fichier disque correspondant au Heap File et rajout d’une Header Page « vide » à ce fichier.
+	 */
 	public void createNewOnDisk(){
 		this.dm.createFile(relDef.getFileIdx());
 		PageId headerPage = this.dm.addPage(relDef.getFileIdx());	
@@ -28,12 +31,14 @@ public class HeapFile {
 			e.printStackTrace();
 		}
 		this.bm.freePage(headerPage, true);
-
 	}	
 
+	/*
+	 * 
+	 */
 	public PageId addDataPage(){
 		this.dm.addPage(relDef.getFileIdx());
-		PageId pid = new PageId (relDef.getFileIdx(), 0);
+		PageId pid = new PageId(relDef.getFileIdx(), 0);
 		byte[] buff = null;
 		try {
 			buff = this.bm.getPage(pid);
@@ -48,5 +53,8 @@ public class HeapFile {
 		}
 		return pid;
 	}
+	
+	public PageId getFreeDataPageId() {
+		
+	}
 }
-	//PageId getFreeDataPageId()
