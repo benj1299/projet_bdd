@@ -1,5 +1,7 @@
 package bdd;
 
+import java.io.IOException;
+
 public class HeapFile {
 
 	RelDef relDef;
@@ -16,7 +18,7 @@ public class HeapFile {
 	/*
 	 *  Création du fichier disque correspondant au Heap File et rajoute une Header Page « vide » à ce fichier.
 	 */
-	public void createNewOnDisk(){
+	public void createNewOnDisk() throws IOException{
  		this.dm.createFile(relDef.getFileIdx());
 		PageId headerPage = this.dm.addPage(relDef.getFileIdx());	
 		byte[] buff = null;
@@ -37,7 +39,7 @@ public class HeapFile {
 	/*
 	 * Rajoute une page au fichier Disk correspondant et actualise les infos de la headerPage
 	 */
-	public PageId addDataPage(){
+	public PageId addDataPage() throws IOException{
 		this.dm.addPage(relDef.getFileIdx());
 		PageId pid = new PageId(relDef.getFileIdx(), 0);
 		byte[] buff = null;

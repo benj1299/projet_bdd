@@ -1,4 +1,5 @@
 package bdd;
+import java.nio.ByteBuffer;
 import java.util.List;
 
 public class Record {
@@ -17,13 +18,9 @@ public class Record {
 	 * @param pos
 	 */
 	public void writeToBuffer(byte[] buff, int pos) {
-		int j = 0;
-		for (int i = pos; i < pos+buff.length; i++) {
-			byte value = (byte) this.values.get(j);
-			buff[i] = value;
-			j++;
-		}
-		//revoir cette méthode pour l'écriture des bytes avec ByteBuffer
+	    ByteBuffer bbuf = ByteBuffer.allocate(buff.length);
+	    bbuf.position(pos);
+	    bbuf.put(buff);
 	}
 	
 	/**
@@ -32,10 +29,9 @@ public class Record {
 	 * @param pos
 	 */
 	public void readFromBuffer(byte[] buff, int pos) {
-		for (int i = pos; i < pos+buff.length; i++) {
-			System.out.println(buff[i]);
-		}
-		//revoir cette méthode pour la lecture des bytes avec ByteBuffer
+	    ByteBuffer bbuf = ByteBuffer.allocate(buff.length);
+	    bbuf.position(pos);
+	    bbuf.get();
 	}
 
 	/**
