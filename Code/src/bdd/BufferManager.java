@@ -41,7 +41,6 @@ public class BufferManager {
 			this.bufferPool.add(frame);
 			return frame.getBuff();			
 		}
-		
 		else {
 			for(int i = 0 ; i<2 ; i++)
 				for(Frame x1 : this.bufferPool)
@@ -63,7 +62,6 @@ public class BufferManager {
 							exception = false;
 						}
 					}
-
 		}
 
 		if(exception) {
@@ -86,7 +84,6 @@ public class BufferManager {
 				if(x.getPinCount() == 0) {
 					x.setRefBit(true);
 				}
-
 			}
 		}
 	}

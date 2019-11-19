@@ -9,7 +9,7 @@ public class RelDef {
 	private int fileIdx;
 	private int recordSize;
 	private int slotCount;
-
+	
 	// Getters / Setters
 	
 	/**
