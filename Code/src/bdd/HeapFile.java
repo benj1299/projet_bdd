@@ -61,7 +61,15 @@ public class HeapFile {
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {
-		PageId pid = new PageId(relDef.getFileIdx(), 0);
+		PageId pid = new PageId(this.relDef.getFileIdx(), 0);
+		try {
+			byte[] Page = this.bm.getPage(pid);
+			if(((int)Page.length) - 1 >= this.relDef.getSlotCount()) {
+				
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 }

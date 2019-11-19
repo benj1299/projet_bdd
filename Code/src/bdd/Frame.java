@@ -12,7 +12,7 @@ public class Frame {
 		this.pageId = pageId;
 		this.pinCount = 0;
 		this.dirty = false;
-		this.refBit=false;
+		this.refBit = false;
 		this.buff = buff;
 	}
 	

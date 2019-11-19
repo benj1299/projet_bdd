@@ -28,7 +28,6 @@ public class DBDef {
 	public DBDef() {
 		this.tabRelDef = new Vector<RelDef>();
 		this.count = 0;
-		
 	}
 	
 	public void init() throws FileNotFoundException, IOException, ClassNotFoundException{

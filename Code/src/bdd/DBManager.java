@@ -2,6 +2,7 @@ package bdd;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.Vector;
 
 public class DBManager {
 	
@@ -59,7 +60,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * Créé une relation via un fichier Binaire RandomAccessFile 
+	 * Créé une relation avec RelDef et l'ajoute dans DBDef
 	 * 
 	 * @param name - Nom de la relation
 	 * @param nbColumn - Nombre de column
@@ -67,17 +68,27 @@ public class DBManager {
 	 * 
 	 * @return void
 	 */
-	public void createRelation(String name, int nbColumn, String[] typeColumns){
+	public void createRelation(String name, int nbColumn, Vector<String> typeColumns){
+		RelDef relation = new RelDef();
 		int recordSize = 0;
-		for (int i = 0; i < nbColumn; i++){
-			if (typeColumns[i].equals("float")||typeColumns[i].equals("int")){
+
+		for (int i = 0; i < nbColumn; i++)
+			if (typeColumns.get(i).equals("float") || typeColumns.get(i).equals("int")) {
 				recordSize+=4;
-			}   
-			else {
-				String mots []= typeColumns[i].split("");
-				recordSize +=Integer.parseInt(mots[6]);	
 			}
-		}
+			else {
+				String mots[] = typeColumns.get(i).split("");
+				recordSize += Integer.parseInt(mots[6]);	
+			}
+		
 		int slotCount = Constants.PAGE_SIZE/recordSize;
+				
+		relation.setName(name);
+		relation.setNbColumn(nbColumn);
+		relation.setRecordSize(recordSize);
+		relation.setSlotCount(slotCount);
+		relation.setTypeColumn(typeColumns);
+		
+		this.dbdef.addRelation(relation);
 	}
 }

@@ -18,6 +18,7 @@ public class DiskManager {
       }
       return instance ;
    }
+	
     /**
      * Créer un fichier data_file_idx.rf dans le DIRECTORY_DB
      * @param fileIdx - Identifiant / indice du fichier
@@ -37,8 +38,9 @@ public class DiskManager {
      * Rajoute une page au fichier spécifié par fileIdx et renvoie la nouvelle page ajoutée
      * @param fileIdx - Identifiant / indice du fichier
      * @return PageId
+     * @throws IOException 
      */
-    public PageId addPage(int fileIdx) {
+    public PageId addPage(int fileIdx) throws IOException {
         File file = getFile(fileIdx);
         if(!file.exists()){
         	throw new NullPointerException();
@@ -46,9 +48,11 @@ public class DiskManager {
         
         int fileSize = (int) file.length();
         int pageIdx = fileSize / Constants.PAGE_SIZE;
+		byte[] b = new byte[Constants.PAGE_SIZE];
 
 		try {
 			RandomAccessFile randomFile = new RandomAccessFile(file, "rw");
+			randomFile.write(b, fileSize, Constants.PAGE_SIZE);
 			// Créer les metadonnées correspondantes
 			// Ajouter au ficher la page avec les metadonnées
 		} catch (FileNotFoundException e) {
@@ -85,7 +89,7 @@ public class DiskManager {
      * Ecrit le contenu de l'argument buff dans le fichier et à la position indiquée par l'argument pageId
      * @param pageId - Identifiant de la page
      * @param buff - Buffer
-     * @throws Exception 
+     * @throws IOException 
      */
     public void writePage(PageId pageId, byte[] buff) throws Exception {
     	if(buff.length > Constants.PAGE_SIZE) {
@@ -99,7 +103,7 @@ public class DiskManager {
             file.close();  
     	} 
     	catch(IOException e) {
-    		throw new Exception("Probleme d'ecriture fichier");
+    		throw new IOException("Probleme d'ecriture fichier");
     	}
       }
 

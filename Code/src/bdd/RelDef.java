@@ -5,7 +5,7 @@ public class RelDef {
 	
 	private String name;
 	private int nbColumn;
-	private static Vector<String> typeColumn;
+	private Vector<String> typeColumn;
 	private int fileIdx;
 	private int recordSize;
 	private int slotCount;
@@ -43,15 +43,15 @@ public class RelDef {
 	/**
 	 * @return the typeColumn
 	 */
-	public static Vector<String> getTypeColumn() {
+	public Vector<String> getTypeColumn() {
 		return typeColumn;
 	}
 	
 	/**
 	 * @param typeColumn the typeColumn to set
 	 */
-	public static void setTypeColumn(Vector<String> typeColumn) {
-		RelDef.typeColumn = typeColumn;
+	public void setTypeColumn(Vector<String> typeColumn) {
+		this.typeColumn = typeColumn;
 	}
 
 	public int getFileIdx() {

@@ -4,7 +4,7 @@ import java.util.List;
 public class Record {
 	
 	private RelDef relation;
-	private List<Object> values;
+	private List<Object> values; // Valeurs d'un record
 	
 	public Record(RelDef relation, List<Object> values) {
 		this.setRelation(relation);
@@ -23,6 +23,7 @@ public class Record {
 			buff[i] = value;
 			j++;
 		}
+		//revoir cette méthode pour l'écriture des bytes avec ByteBuffer
 	}
 	
 	/**
@@ -30,10 +31,11 @@ public class Record {
 	 * @param buff
 	 * @param pos
 	 */
-	public void readToBuffer(byte[] buff, int pos) {
+	public void readFromBuffer(byte[] buff, int pos) {
 		for (int i = pos; i < pos+buff.length; i++) {
 			System.out.println(buff[i]);
 		}
+		//revoir cette méthode pour la lecture des bytes avec ByteBuffer
 	}
 
 	/**
