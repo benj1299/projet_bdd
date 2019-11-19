@@ -72,4 +72,85 @@ public class HeapFile {
 		}
 		
 	}
+	
+	
+	import java.io.File;
+
+
+public class HeapFile {
+	
+	
+	RelDef relDef;
+	
+	
+	
+	
+	
+	void createNewOnDisk(){
+		
+		
+				DiskManager.createFile(relDef.getfileIdx());
+				PageId headerPage = DiskManager.addPage(relDef.getfileIdx());	
+					byte[] buff =BufferManager.getPage(headerPage);
+					
+					buff[0]=0;
+					
+					DiskManager.writePage(headerPage, buff);
+		
+					BufferManager.freePage(headerPage, 1);
+		
+	}	
+
+	
+	
+	PageId addDataPage(){
+		
+			
+		
+		PageId pid =new PageId (relDef.getfileIdx(),0);
+		
+		byte [] buff = BufferManager.getPage(pid);
+		buff[0]=+1;
+		
+		DiskManager.writePage(pid, buff);
+
+		
+		 return DiskManager.addPage(relDef.getfileIdx());
+		
+		
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	//PageId  getFreeDataPageId(){	
+		
+		
+		public Rid writeRecordToDataPage(Record record, PageId pageId){
+				
+			byte[] Buffer = bm.getPage(pageId);
+			int pos=Buffer.length;
+			
+			
+			 record.writeToBuffer(Buffer, pos);
+			 
+			 bm.freePage(pageId, true);
+			 
+			  PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+			  
+			  byte[]  buffheader = bm.getPage(headerPage);
+			 
+			
+			
+		}
+		
+			
+	
+	
+	
 }
