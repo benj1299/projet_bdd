@@ -1,6 +1,7 @@
 package bdd;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class HeapFile {
 
@@ -74,4 +75,21 @@ public class HeapFile {
 		}
 		
 	}
+	
+	/**
+	 * Pour inserer un record
+	 * @param record
+	 * @return
+	 */
+	public Rid insertRecord(Record record) {
+		
+	}
+	/**
+	 * 
+	 * @return ArrayList<Record> liste, une liste de Record
+	 */
+	public ArrayList<Record> getAllRecords(){
+		
+	}
+	
 }
