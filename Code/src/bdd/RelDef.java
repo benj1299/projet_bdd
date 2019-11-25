@@ -10,8 +10,16 @@ public class RelDef {
 	private int recordSize;
 	private int slotCount;
 	
-	// Getters / Setters
+	public RelDef(String name, int nbColumn, Vector<String> typeColumn, int recordSize, int fileIdx) {
+		this.fileIdx = fileIdx;
+		this.slotCount = Constants.PAGE_SIZE/recordSize;
+		this.name = name;
+		this.nbColumn = nbColumn;
+		this.typeColumn = typeColumn;
+		this.recordSize = recordSize;
+	}
 	
+	// Getters / Setters
 	/**
 	 * @return the name
 	 */

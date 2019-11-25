@@ -2,13 +2,9 @@ package bdd;
 import java.util.ArrayList;
 
 public class FileManager {
-
-
-
 	private static FileManager instance;
 	private FileManager fileManager;
 	private ArrayList<HeapFile> heapFiles;
-
 
 	/**
 	 * Singleton de FileManager
@@ -29,7 +25,4 @@ public class FileManager {
 		this.fileManager = FileManager.getInstance();
 		this.heapFiles = new ArrayList<>();
 	}
-
-
-
 }

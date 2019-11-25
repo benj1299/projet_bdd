@@ -2,6 +2,7 @@ package bdd;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Vector;
 
 public class DBManager {
 	
@@ -63,27 +64,17 @@ public class DBManager {
 	 * 
 	 * @return void
 	 */
-	public void createRelation(String name, int nbColumn, Vector<String> typeColumns){
-		RelDef relation = new RelDef();
+	public void createRelation(String name, int nbColumn, Vector<String> typeColumn){
 		int recordSize = 0;
-
 		for (int i = 0; i < nbColumn; i++)
-			if (typeColumns.get(i).equals("float") || typeColumns.get(i).equals("int")) {
-				recordSize+=4;
+			if (typeColumn.get(i).equals("float") || typeColumn.get(i).equals("int")) {
+				recordSize += 4;
 			}
 			else {
-				String mots[] = typeColumns.get(i).split("");
-				recordSize += Integer.parseInt(mots[6]);	
+				String mots[] = typeColumn.get(i).split("");
+				recordSize += Integer.parseInt(mots[6])*2;	
 			}
-		
-		int slotCount = Constants.PAGE_SIZE/recordSize;
-				
-		relation.setName(name);
-		relation.setNbColumn(nbColumn);
-		relation.setRecordSize(recordSize);
-		relation.setSlotCount(slotCount);
-		relation.setTypeColumn(typeColumns);
-		
+		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount());		
 		this.dbdef.addRelation(relation);
 	}
 }

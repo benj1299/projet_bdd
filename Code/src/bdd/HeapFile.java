@@ -9,15 +9,14 @@ public class HeapFile {
 	private DiskManager dm;
 	private BufferManager bm;
 	
-	public HeapFile(int fileIdx) {
+	public HeapFile(RelDef reldef) {
 		this.dm = DiskManager.getInstance();
 		this.bm = BufferManager.getInstance();
-		this.relDef = new RelDef();
-		this.relDef.setFileIdx(fileIdx);
+		this.relDef = reldef;
 	}
 
 	/*
-	 *  Création du fichier disque correspondant au Heap File et rajoute une Header Page « vide » à ce fichier.
+	 *  Création du fichier disque correspondant au HeapFile et rajoute une Header Page « vide » à ce fichier.
 	 */
 	public void createNewOnDisk() throws IOException{
  		this.dm.createFile(relDef.getFileIdx());
@@ -41,21 +40,21 @@ public class HeapFile {
 	 * Rajoute une page au fichier Disk correspondant et actualise les infos de la headerPage
 	 */
 	public PageId addDataPage() throws IOException{
-		this.dm.addPage(relDef.getFileIdx());
-		PageId pid = new PageId(relDef.getFileIdx(), 0);
-		byte[] buff = null;
+		byte[] buffHeader = null;
+		PageId pid = this.dm.addPage(relDef.getFileIdx());
+		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		
 		try {
-			buff = this.bm.getPage(pid);
+			buffHeader = this.bm.getPage(headerPage);
+			buffHeader[0]+= 1;
+			buffHeader[buffHeader.length] = 0;
+			this.dm.writePage(headerPage, buffHeader);
+			this.bm.freePage(headerPage, true);
+			this.relDef.setSlotCount(this.relDef.getSlotCount()-1);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		buff[0]+= 1;
-		try {
-			this.dm.writePage(pid, buff);
-			this.relDef.setSlotCount(this.relDef.getSlotCount()+1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		
 		return pid;
 	}
 	
@@ -64,10 +63,10 @@ public class HeapFile {
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {
-		PageId pid = new PageId(this.relDef.getFileIdx(), 0);
+		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 		try {
-			byte[] Page = this.bm.getPage(pid);
-			if(((int)Page.length) - 1 >= this.relDef.getSlotCount()) {
+			byte[] buffHeader = this.bm.getPage(headerPage);
+			if(((int)buffHeader.length) - 1 >= this.relDef.getSlotCount()) {
 				
 			}
 		} catch (Exception e) {
