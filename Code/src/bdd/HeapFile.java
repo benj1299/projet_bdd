@@ -137,6 +137,7 @@ public class HeapFile {
 			  listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
 			  
 		  }
+	}
 		
 	
 	
