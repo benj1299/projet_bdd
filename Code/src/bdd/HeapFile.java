@@ -4,9 +4,9 @@ import java.io.IOException;
 
 public class HeapFile {
 
-	RelDef relDef;
-	DiskManager dm;
-	BufferManager bm;
+	private RelDef relDef;
+	private DiskManager dm;
+	private BufferManager bm;
 	
 	public HeapFile(int fileIdx) {
 		this.dm = DiskManager.getInstance();
@@ -59,7 +59,7 @@ public class HeapFile {
 	}
 	
 	/*
-	 * Identifie les pages libres
+	 *  Identifie les pages libres sinon créé une nouvelle page
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {

@@ -48,8 +48,8 @@ public class DBDef {
 	 * Ajoute un element à la liste vector et incrémente count
 	 * @param x
 	 */
-	public void addRelation(RelDef x) {
-		this.tabRelDef.addElement(x);
+	public void addRelation(RelDef relation) {
+		this.tabRelDef.addElement(relation);
 		this.count++;
 	}
 

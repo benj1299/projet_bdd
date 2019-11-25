@@ -3,8 +3,8 @@ import java.util.Vector;
 public class BufferManager {
 
 	private static BufferManager instance; 	
-	private Vector<Frame> bufferPool = new Vector<Frame>();
-	private DiskManager dkManager = DiskManager.getInstance();
+	private Vector<Frame> bufferPool;
+	private DiskManager dkManager;
 
 	public static BufferManager getInstance(){
 		if (instance == null) {
@@ -17,6 +17,10 @@ public class BufferManager {
 		return instance ;
 	}
 
+	public BufferManager() {
+		this.bufferPool = new Vector<Frame>();
+		this.dkManager = DiskManager.getInstance();
+	}
 	/**
 	 * Rempli (ou remplace si besoin) le buffer correspondant à la bonne frame 
 	 * avec le contenu de la page désignée par l’argument pageId

@@ -1,14 +1,13 @@
 package bdd;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.RandomAccessFile;
-import java.util.Vector;
 
 public class DBManager {
 	
 	private static DBManager instance;
 	private DBDef dbdef;
-	private BufferManager bufferManager;
+	private BufferManager bm;
 
 	/**
 	 * Singleton de DBManager
@@ -27,7 +26,7 @@ public class DBManager {
 	
 	public DBManager() {
 		this.dbdef = new DBDef();
-		this.bufferManager = BufferManager.getInstance();
+		this.bm = BufferManager.getInstance();
 	}
 	
 	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
@@ -36,7 +35,7 @@ public class DBManager {
 	
 	public void finish() throws Exception {
 		this.dbdef.finish();
-		this.bufferManager.flushAll();
+		this.bm.flushAll();
 	}
 	
 	/**
@@ -50,10 +49,6 @@ public class DBManager {
 		
 		if(args[0].contentEquals("exit")) {
 			return false;
-		}
-
-		if(args[0].contentEquals("create")) {
-			this.createRelation(args[1], Integer.parseInt(args[2]), typeColumn);
 		}
 		
 		return true;
