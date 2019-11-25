@@ -41,6 +41,16 @@ public class FileManager {
 		
 		
 	}
+	/**
+	 * créer un nouvel objet de type HeapFile et lui attribuer relDef
+	 * •le rajouter à la liste heapFiles
+	 * •puis appeler sur cet objet la méthode createNewOnDisk.
+	 * Rajoutez un appel à CreateRelationFile dans la méthode CreateRelation du DBManager.
+	 * @param relDef
+	 */
+	public void createRelationFile(RelDef relDef) {
+
+	}
 
 	public Rid inserRecordInRelation(Record record, String relName) {
 
