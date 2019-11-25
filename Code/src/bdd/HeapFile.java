@@ -80,12 +80,48 @@ public class HeapFile {
 		return null;
 	}
 	
+		public Rid writeRecordToDataPage(Record record, PageId pageId){
+		
+		byte[] Buffer = bm.getPage(pageId);
+		int pos=Buffer.length;
+	
+	
+		 record.writeToBuffer(Buffer, pos);
+		 
+		 bm.freePage(pageId, true);
+		 
+		  PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		  
+		  byte[]  buffheader = bm.getPage(headerPage);
+		  
+		  buffheader[PageId.pageIdx]-=1;
+		 
+		 
+		  return new Rid (pageId, pos);
+	
+	}
+
+	
+
+	
+	
+	
+	
+	
 	/**
 	 * Pour inserer un record
 	 * @param record
 	 * @return
 	 */
 	public Rid insertRecord(Record record) {
+		
+		PageId pid = getFreeDataPageId() ;
+		
+		return writeRecordToDataPage(record, pid);
+		
+		
+		
+		
 		
 	}
 	/**
@@ -94,22 +130,25 @@ public class HeapFile {
 	 */
 	public ArrayList<Record> getAllRecords(){
 		
-	}
-	
-	/*
-	 * É́crit un record dans la page de données identifiée par pageId, et renvoyer son Rid
-	 * @param record
-	 * @param pageId
-	 * @return record Id
-	 */
-	public Rid writeRecordToDataPage(Record record, PageId pageId){
-		byte[] pageBuffer = bm.getPage(pageId);
-		record.writeToBuffer(pageBuffer, pageBuffer.length);
-		bm.freePage(pageId, true);
-		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-		byte[]  buffheader = bm.getPage(headerPage);
-	}
 		
+		 PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		  
+		  byte[]  buffheader = bm.getPage(headerPage);
+		  
+		  List <Record> listeDeRecords = new ArrayList <Record> ();
+		  
+		  for (int i=1; i<=buffheader.lenght; i++){
+			  
+			  listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
+			  
+		  }
+		
+		
+		
+		return listeDeRecords;
+		
+		
+	}	
 			
 	
 	
