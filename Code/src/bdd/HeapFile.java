@@ -2,13 +2,14 @@ package bdd;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class HeapFile {
 
 	private RelDef relDef;
 	private DiskManager dm;
 	private BufferManager bm;
-	
+
 	public HeapFile(RelDef reldef) {
 		this.dm = DiskManager.getInstance();
 		this.bm = BufferManager.getInstance();
@@ -19,7 +20,7 @@ public class HeapFile {
 	 *  Création du fichier disque correspondant au HeapFile et rajoute une Header Page « vide » à ce fichier.
 	 */
 	public void createNewOnDisk() throws IOException{
- 		this.dm.createFile(relDef.getFileIdx());
+		this.dm.createFile(relDef.getFileIdx());
 		PageId headerPage = this.dm.addPage(relDef.getFileIdx());	
 		byte[] buff = null;
 		try {
@@ -43,7 +44,7 @@ public class HeapFile {
 		byte[] buffHeader = null;
 		PageId pid = this.dm.addPage(relDef.getFileIdx());
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-		
+
 		try {
 			buffHeader = this.bm.getPage(headerPage);
 			buffHeader[0]+= 1;
@@ -54,10 +55,10 @@ public class HeapFile {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
+
 		return pid;
 	}
-	
+
 	/**
 	 * Identifie les pages libres du fichier
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
@@ -73,13 +74,13 @@ public class HeapFile {
 				}
 			}
 			this.bm.freePage(headerPage, false);
-				
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	/**
 	 * É́crit un record dans la page de données identifiée par pageId, et renvoyer son Rid
 	 * @param record
@@ -91,13 +92,13 @@ public class HeapFile {
 		byte[] pageBuffer = this.bm.getPage(pageId);
 		record.writeToBuffer(this.bm.getPage(pageId), pageBuffer.length);
 		bm.freePage(pageId, true);
-		
+
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 		byte[] buffheader = bm.getPage(headerPage);
 		buffheader[pageId.getPageIdx()]-=1;
 		return new Rid(pageId, pageBuffer.length);
 	}
-	
+
 	/**
 	 * 
 	 * @return ArrayList<Record> liste, une liste de Record
@@ -111,5 +112,37 @@ public class HeapFile {
 		}
 		return records;
 	}
-	
+
+	/**
+	 * Pour inserer un record
+	 * @param record
+	 * @return
+	 * @throws Exception 
+	 */
+	public Rid insertRecord(Record record) throws Exception {
+		PageId pid = getFreeDataPageId() ;
+		return this.writeRecordToDataPage(record, pid);	
+	}
+
+	/**
+	 * 
+	 * @return ArrayList<Record> liste, une liste de Record
+	 */
+	public ArrayList<Record> getAllRecords(){
+		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		byte[]  buffheader = bm.getPage(headerPage);	
+		List <Record> listeDeRecords = new ArrayList <Record> ();
+		for (int i=1; i<=buffheader.lenght; i++){
+			listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
+		}
+	}
+
+	/**
+	 * 
+	 * @return this.relDef
+	 */
+	public RelDef getRelDef() {
+		return this.relDef;
+	}
+
 }

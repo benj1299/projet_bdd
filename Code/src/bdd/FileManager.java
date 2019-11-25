@@ -25,6 +25,32 @@ public class FileManager {
 		this.fileManager = FileManager.getInstance();
 		this.heapFiles = new ArrayList<>();
 	}
+	
+	/**
+	 * parcourir la liste des RelDef de la DBDef
+	 * •créer pour chaque telle RelDef un objet de type HeapFile en lui attribuant la RelDef en question
+	 * •rajouter le HeapFile ainsi créé à la liste heapFiles.
+	 * Rajoutez un appel à cette méthode dans la méthode Init du DBManager
+	 */
+	public void init() {
+
+		for (RelDef relDef : DBDef.getInstance().getTabRelDef()) {
+			HeapFile x = new HeapFile(relDef);
+			this.heapFiles.add(x);
+		}
+		
+		
+	}
+	/**
+	 * créer un nouvel objet de type HeapFile et lui attribuer relDef
+	 * •le rajouter à la liste heapFiles
+	 * •puis appeler sur cet objet la méthode createNewOnDisk.
+	 * Rajoutez un appel à CreateRelationFile dans la méthode CreateRelation du DBManager.
+	 * @param relDef
+	 */
+	public void createRelationFile(RelDef relDef) {
+
+	}
 
 	public Rid inserRecordInRelation(Record record, String relName) {
 
@@ -49,15 +75,7 @@ public class FileManager {
 
 	}
 	
-	/**
-	 * Pour inserer un record
-	 * @param record
-	 * @return
-	 * @throws Exception 
-	 */
-	public Rid insertRecord(Record record) throws Exception {
-		PageId pid = getFreeDataPageId() ;
-		return this.writeRecordToDataPage(record, pid);	
-	}
+	
+	
 
 }
