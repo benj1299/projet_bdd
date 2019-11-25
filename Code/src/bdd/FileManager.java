@@ -48,7 +48,16 @@ public class FileManager {
 	public ArrayList<Record> selectFromRelation(String relName, int idxCol, String valeur ){
 
 	}
-
-
+	
+	/**
+	 * Pour inserer un record
+	 * @param record
+	 * @return
+	 * @throws Exception 
+	 */
+	public Rid insertRecord(Record record) throws Exception {
+		PageId pid = getFreeDataPageId() ;
+		return this.writeRecordToDataPage(record, pid);	
+	}
 
 }

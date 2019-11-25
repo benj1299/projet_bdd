@@ -99,21 +99,13 @@ public class HeapFile {
 	}
 	
 	/**
-	 * Pour inserer un record
-	 * @param record
-	 * @return
-	 */
-	public Rid insertRecord(Record record) {
-		PageId pid = getFreeDataPageId() ;
-		return writeRecordToDataPage(record, pid);	
-	}
-	
-	/**
 	 * 
 	 * @return ArrayList<Record> liste, une liste de Record
+	 * @throws Exception 
 	 */
-	public ArrayList<Record> getAllRecords(){	
-		return listeDeRecords;
+	public ArrayList<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
+		ArrayList<Record> records = new ArrayList<Record>();
+		byte[] pageBuffer = this.bm.getPage(pageId);
+		
 	}
-	
 }
