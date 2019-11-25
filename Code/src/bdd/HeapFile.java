@@ -91,4 +91,33 @@ public class HeapFile {
 		
 	}
 	
+	
+			public Rid writeRecordToDataPage(Record record, PageId pageId){
+				
+				byte[] Buffer = bm.getPage(pageId);
+				int pos=Buffer.length;
+			
+			
+				 record.writeToBuffer(Buffer, pos);
+				 
+				 bm.freePage(pageId, true);
+				 
+				  PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+				  
+				  byte[]  buffheader = bm.getPage(headerPage);
+				 
+			
+			
+			}
+		
+			
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
