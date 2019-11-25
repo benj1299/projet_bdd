@@ -1,15 +1,14 @@
 package bdd;
 import java.nio.ByteBuffer;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Record {
 	
 	private RelDef relation;
-	private List<Object> values; // Valeurs d'un record
+	private ArrayList<Object> values; // Valeurs d'un record
 	
-	public Record(RelDef relation, List<Object> values) {
-		this.setRelation(relation);
-		this.setValues(values);
+	public Record(RelDef relation) {
+		this.relation = relation;
 	}
 	
 	/**
@@ -31,7 +30,7 @@ public class Record {
 	public void readFromBuffer(byte[] buff, int pos) {
 	    ByteBuffer bbuf = ByteBuffer.allocate(buff.length);
 	    bbuf.position(pos);
-	    bbuf.get();
+	    this.setValues(bbuf.get());
 	}
 
 	/**
@@ -51,14 +50,14 @@ public class Record {
 	/**
 	 * @return the values
 	 */
-	public List<Object> getValues() {
+	public ArrayList<Object> getValues() {
 		return values;
 	}
 
 	/**
 	 * @param values the values to set
 	 */
-	public void setValues(List<Object> values) {
-		this.values = values;
+	public void setValues(byte value) {
+		this.values.add(value);
 	}
 }

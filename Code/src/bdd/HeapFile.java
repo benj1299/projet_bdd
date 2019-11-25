@@ -107,9 +107,11 @@ public class HeapFile {
 	public ArrayList<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
 		ArrayList<Record> records = new ArrayList<Record>();
 		byte [] buff = this.bm.getPage(pageId);
+		
 		for(int i = 0; i < this.relDef.getSlotCount(); i++) {
 			records.add(new Record(this.relDef, ));
 		}
+		
 		return records;
 	}
 
