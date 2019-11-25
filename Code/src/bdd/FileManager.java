@@ -75,36 +75,6 @@ public class FileManager {
 
 	}
 	
-	/**
-	 * Pour inserer un record
-	 * @param record
-	 * @return
-	 * @throws Exception 
-	 */
-	public Rid insertRecord(Record record) throws Exception {
-		PageId pid = getFreeDataPageId() ;
-		return this.writeRecordToDataPage(record, pid);	
-	}
-	
-		/**
-	 * 
-	 * @return ArrayList<Record> liste, une liste de Record
-	 */
-	public ArrayList<Record> getAllRecords(){
-		
-		
-		 PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-		  
-		  byte[]  buffheader = bm.getPage(headerPage);	
-		  
-		  List <Record> listeDeRecords = new ArrayList <Record> ();
-		  
-		  for (int i=1; i<=buffheader.lenght; i++){
-		  
-			  listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
-			  
-		  }
-		
 	
 	
 
