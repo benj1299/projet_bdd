@@ -47,7 +47,7 @@ public class HeapFile {
 		try {
 			buffHeader = this.bm.getPage(headerPage);
 			buffHeader[0]+= 1;
-			buffHeader[buffHeader.length] = 0;
+			buffHeader[buffHeader.length] = (byte) this.relDef.getSlotCount();
 			this.dm.writePage(headerPage, buffHeader);
 			this.bm.freePage(headerPage, true);
 			this.relDef.setSlotCount(this.relDef.getSlotCount()-1);
@@ -59,20 +59,25 @@ public class HeapFile {
 	}
 	
 	/*
-	 *  Identifie les pages libres sinon créé une nouvelle page
+	 *  Identifie les pages libres du fichier
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {
 		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 		try {
 			byte[] buffHeader = this.bm.getPage(headerPage);
-			if(((int)buffHeader.length) - 1 >= this.relDef.getSlotCount()) {
-				
+			for(int i = 1; i < buffHeader.length; i++) {
+				if((int) buffHeader[i] > 0) {
+					this.bm.freePage(headerPage, false);
+					return new PageId(this.relDef.getFileIdx(), i);
+				}
 			}
+			this.bm.freePage(headerPage, false);
+				
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		return null;
 	}
 	
 	/**
@@ -91,24 +96,19 @@ public class HeapFile {
 		
 	}
 	
-	
-			public Rid writeRecordToDataPage(Record record, PageId pageId){
-				
-				byte[] Buffer = bm.getPage(pageId);
-				int pos=Buffer.length;
-			
-			
-				 record.writeToBuffer(Buffer, pos);
-				 
-				 bm.freePage(pageId, true);
-				 
-				  PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-				  
-				  byte[]  buffheader = bm.getPage(headerPage);
-				 
-			
-			
-			}
+	/*
+	 * É́crit un record dans la page de données identifiée par pageId, et renvoyer son Rid
+	 * @param record
+	 * @param pageId
+	 * @return record Id
+	 */
+	public Rid writeRecordToDataPage(Record record, PageId pageId){
+		byte[] pageBuffer = bm.getPage(pageId);
+		record.writeToBuffer(pageBuffer, pageBuffer.length);
+		bm.freePage(pageId, true);
+		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		byte[]  buffheader = bm.getPage(headerPage);
+	}
 		
 			
 	
