@@ -15,7 +15,7 @@ public class HeapFile {
 		this.relDef = reldef;
 	}
 
-	/*
+	/**
 	 *  Création du fichier disque correspondant au HeapFile et rajoute une Header Page « vide » à ce fichier.
 	 */
 	public void createNewOnDisk() throws IOException{
@@ -36,7 +36,7 @@ public class HeapFile {
 		this.bm.freePage(headerPage, true);
 	}	
 
-	/*
+	/**
 	 * Rajoute une page au fichier Disk correspondant et actualise les infos de la headerPage
 	 */
 	public PageId addDataPage() throws IOException{
@@ -58,8 +58,8 @@ public class HeapFile {
 		return pid;
 	}
 	
-	/*
-	 *  Identifie les pages libres du fichier
+	/**
+	 * Identifie les pages libres du fichier
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {
@@ -80,33 +80,23 @@ public class HeapFile {
 		return null;
 	}
 	
-		public Rid writeRecordToDataPage(Record record, PageId pageId){
+	/**
+	 * É́crit un record dans la page de données identifiée par pageId, et renvoyer son Rid
+	 * @param record
+	 * @param pageId
+	 * @return record Id
+	 * @throws Exception 
+	 */
+	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception{
+		byte[] pageBuffer = this.bm.getPage(pageId);
+		record.writeToBuffer(this.bm.getPage(pageId), pageBuffer.length);
+		bm.freePage(pageId, true);
 		
-		byte[] Buffer = bm.getPage(pageId);
-		int pos=Buffer.length;
-	
-	
-		 record.writeToBuffer(Buffer, pos);
-		 
-		 bm.freePage(pageId, true);
-		 
-		  PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-		  
-		  byte[]  buffheader = bm.getPage(headerPage);
-		  
-		  buffheader[PageId.pageIdx]-=1;
-		 
-		 
-		  return new Rid (pageId, pos);
-	
+		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		byte[] buffheader = bm.getPage(headerPage);
+		buffheader[pageId.getPageIdx()]-=1;
+		return new Rid (pageId, pageBuffer.length);
 	}
-
-	
-
-	
-	
-	
-	
 	
 	/**
 	 * Pour inserer un record
@@ -114,49 +104,16 @@ public class HeapFile {
 	 * @return
 	 */
 	public Rid insertRecord(Record record) {
-		
 		PageId pid = getFreeDataPageId() ;
-		
-		return writeRecordToDataPage(record, pid);
-		
-		
-		
-		
-		
+		return writeRecordToDataPage(record, pid);	
 	}
+	
 	/**
 	 * 
 	 * @return ArrayList<Record> liste, une liste de Record
 	 */
-	public ArrayList<Record> getAllRecords(){
-		
-		
-		 PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-		  
-		  byte[]  buffheader = bm.getPage(headerPage);
-		  
-		  List <Record> listeDeRecords = new ArrayList <Record> ();
-		  
-		  for (int i=1; i<=buffheader.lenght; i++){
-			  
-			  listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
-			  
-		  }
-		
-		
-		
+	public ArrayList<Record> getAllRecords(){	
 		return listeDeRecords;
-		
-		
-	}	
-			
-	
-	
-	
-	
-	
-	
-	
-	
+	}
 	
 }
