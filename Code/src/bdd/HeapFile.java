@@ -108,4 +108,12 @@ public class HeapFile {
 		byte[] pageBuffer = this.bm.getPage(pageId);
 		
 	}
+	
+	/**
+	 * 
+	 * @return this.relDef
+	 */
+	public RelDef getRelDef() {
+		return this.relDef;
+	}
 }
