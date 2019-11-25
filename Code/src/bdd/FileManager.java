@@ -25,6 +25,22 @@ public class FileManager {
 		this.fileManager = FileManager.getInstance();
 		this.heapFiles = new ArrayList<>();
 	}
+	
+	/**
+	 * parcourir la liste des RelDef de la DBDef
+	 * •créer pour chaque telle RelDef un objet de type HeapFile en lui attribuant la RelDef en question
+	 * •rajouter le HeapFile ainsi créé à la liste heapFiles.
+	 * Rajoutez un appel à cette méthode dans la méthode Init du DBManager
+	 */
+	public void init() {
+
+		for (RelDef relDef : DBDef.getInstance().getTabRelDef()) {
+			HeapFile x = new HeapFile(relDef);
+			this.heapFiles.add(x);
+		}
+		
+		
+	}
 
 	public Rid inserRecordInRelation(Record record, String relName) {
 
