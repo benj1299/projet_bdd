@@ -95,7 +95,7 @@ public class HeapFile {
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 		byte[] buffheader = bm.getPage(headerPage);
 		buffheader[pageId.getPageIdx()]-=1;
-		return new Rid (pageId, pageBuffer.length);
+		return new Rid(pageId, pageBuffer.length);
 	}
 	
 	/**
@@ -105,7 +105,11 @@ public class HeapFile {
 	 */
 	public ArrayList<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
 		ArrayList<Record> records = new ArrayList<Record>();
-		byte[] pageBuffer = this.bm.getPage(pageId);
-		
+		byte [] buff = this.bm.getPage(pageId);
+		for(int i = 0; i < this.relDef.getSlotCount(); i++) {
+			records.add(new Record(this.relDef, ));
+		}
+		return records;
 	}
+	
 }
