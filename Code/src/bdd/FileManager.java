@@ -52,8 +52,29 @@ public class FileManager {
 
 	}
 
-	public Rid inserRecordInRelation(Record record, String relName) {
+         /**
+	 * Cette méthode s’occupera de l’insertion de record dans la relation dont le nom est relName.
+	 * Pour cela, il faudra parcourir la liste heapFiles pour trouver celui qui correspond à la relation en question,
+	 *  et ensuite appeler sa propre méthode InsertRecord.
+	 * @param Record record record à inserer 
+	 * @param String relName relation ou il faut inserer record
+	 * @return
+	 */
+	
+	public Rid inserRecordInRelation(Record record, String relName) throws Exception {
 
+		Rid rid = null;
+		for(HeapFile heapFile : this.heapFiles){
+		
+			if(heapFile.getRelDef().getName() == relName) {
+				rid =  heapFile.insertRecord(record);
+			}
+		}
+		
+		if(rid == null) {
+			throw new Exception("relation pas trouvé dans la liste");
+		}
+		return rid;
 	}
 
 	/**
