@@ -41,15 +41,17 @@ public class FileManager {
 		
 		
 	}
+	
 	/**
-	 * créer un nouvel objet de type HeapFile et lui attribuer relDef
-	 * •le rajouter à la liste heapFiles
-	 * •puis appeler sur cet objet la méthode createNewOnDisk.
-	 * Rajoutez un appel à CreateRelationFile dans la méthode CreateRelation du DBManager.
-	 * @param relDef
+    créer un nouvel objet de type HeapFile et lui attribue relDef, le rajouter à la liste heapFiles puis appelle sur cet objet la méthode createNewOnDisk.	
+	 * @param RelDef relDef
+	 * @return
+	 * @throws IOException 
 	 */
-	public void createRelationFile(RelDef relDef) {
-
+	public void  CreateRelationFile (RelDef relDef) throws IOException{
+		HeapFile hp = new HeapFile(relDef);		
+		this.heapFiles.add(hp);	
+		this.heapFiles.get(heapFiles.size()-1).createNewOnDisk();
 	}
 
          /**
@@ -82,38 +84,41 @@ public class FileManager {
 	 * @param relName
 	 * @return liste de Record
 	 */
-	public ArrayList<Record> selectAllFromRelation(String relName){
-
+	public ArrayList<Record> selectAllFromRelation(String relName)throws Exception {
+		for(HeapFile heapFile : this.heapFiles) {
+			if(heapFile.getRelDef().getName() == relName) {
+				return heapFile.getAllRecords();
+			}
+		}
+		throw new Exception("relation pas trouvé dans heapFiles de FileManager");
 	}
+
+
 	/**
-	 * Cette méthode doit retourner une liste contenant tous les records de la relation nomméerelName pour lesquels la valeur sur la colonne idxCol (convertie en chaîne de caractères)est égale à valeur.
+	 * Cette méthode doit retourner une liste contenant tous les records de la relation nommée relName pour lesquels la valeur sur la colonne idxCol (convertie en chaîne de caractères)est égale à valeur.
 	 * @param String relName
 	 * @param int idxCol, un entier correspondant à un indice de colonne
 	 * @param String  valeur
 	 * @return
+	 * @throws Exception 
 	 */
-	public ArrayList<Record> selectFromRelation(String relName, int idxCol, String valeur ){
 
+	public ArrayList<Record> selectFromRelation(String relName, int idxCol, String valeur ) throws Exception  {
+		ArrayList<Record> records = new ArrayList<>();
+		for(HeapFile heapFile : this.heapFiles) {
+
+			if(heapFile.getRelDef().getName() == relName) {
+				for(Record record : this.selectAllFromRelation(relName)) {
+					if((String) record.getValues().get(idxCol) == valeur) {
+						records.add(record);
+					}
+
+				}
+			}
+		}
+		return records;
 	}
 	
-		/**
-:
-     créer un nouvel objet de type HeapFile et lui attribue relDef, le rajouter à la liste heapFiles puis appelle sur cet objet la méthode createNewOnDisk.	
-      * @param RelDef relDef
-	 * @return
-	 */
-	public void  CreateRelationFile (RelDef relDef){
-		
-		HeapFile hp = new HeapFile(relDef);		
-		
-		this.heapFiles.add(hp);
-		
-		this.heapFiles.get(heapFiles.size()-1).createNewOnDisk();
-		
-		
-		
-		
-	}
 	
 	
 
