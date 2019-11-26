@@ -96,6 +96,24 @@ public class FileManager {
 
 	}
 	
+		/**
+:
+     créer un nouvel objet de type HeapFile et lui attribue relDef, le rajouter à la liste heapFiles puis appelle sur cet objet la méthode createNewOnDisk.	
+      * @param RelDef relDef
+	 * @return
+	 */
+	public void  CreateRelationFile (RelDef relDef){
+		
+		HeapFile hp = new HeapFile(relDef);		
+		
+		this.heapFiles.add(hp);
+		
+		this.heapFiles.get(heapFiles.size()-1).createNewOnDisk();
+		
+		
+		
+		
+	}
 	
 	
 
