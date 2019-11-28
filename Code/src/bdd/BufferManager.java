@@ -106,5 +106,12 @@ public class BufferManager {
 			bufferPool.get(i).initFlags(); // pas sur
 		}
 	}
+	
+	/**
+	 * Créé une nouvelle instance remettant ainsi tout à 0
+	 */
+	public void reset() {
+		BufferManager.instance = new BufferManager();
+	}
 
 }

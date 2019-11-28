@@ -18,6 +18,7 @@ public class HeapFile {
 
 	/**
 	 *  Création du fichier disque correspondant au HeapFile et rajoute une Header Page « vide » à ce fichier.
+	 *  @throws IOException
 	 */
 	public void createNewOnDisk() throws IOException{
 		this.dm.createFile(relDef.getFileIdx());
@@ -39,8 +40,9 @@ public class HeapFile {
 
 	/**
 	 * Rajoute une page au fichier Disk correspondant et actualise les infos de la headerPage
+	 * @throws IOException
 	 */
-	public PageId addDataPage() throws IOException{
+	public PageId addDataPage() throws IOException {
 		byte[] buffHeader = null;
 		PageId pid = this.dm.addPage(relDef.getFileIdx());
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
@@ -95,7 +97,8 @@ public class HeapFile {
 
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 		byte[] buffheader = bm.getPage(headerPage);
-		buffheader[pageId.getPageIdx()]-=1;
+		buffheader[pageId.getPageIdx()] -= 1;
+		
 		return new Rid(pageId, pageBuffer.length);
 	}
 
@@ -123,18 +126,18 @@ public class HeapFile {
 	}
 
 	/**
-	 * Pour inserer un record
+	 * Insère un record dans une page libre
 	 * @param record
-	 * @return
+	 * @return Record ID correspondant
 	 * @throws Exception 
 	 */
 	public Rid insertRecord(Record record) throws Exception {
-		PageId pid = getFreeDataPageId() ;
+		PageId pid = getFreeDataPageId();
 		return this.writeRecordToDataPage(record, pid);	
 	}
 
 	/**
-	 * 
+	 * Récupère tous les records du heapFile
 	 * @return ArrayList<Record> liste, une liste de Record
 	 */
 	public ArrayList<Record> getAllRecords(){
