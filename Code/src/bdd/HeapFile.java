@@ -3,6 +3,7 @@ package bdd;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class HeapFile {
 
@@ -107,14 +108,13 @@ public class HeapFile {
 	 * @return ArrayList<Record> liste, une liste de Record
 	 * @throws Exception 
 	 */
-	public ArrayList<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
-		ArrayList<Record> records = new ArrayList<Record>();
+	public Vector<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
+		Vector<Record> records = new Vector<Record>();
 		byte [] bufferPage = this.bm.getPage(pageId);
 		
 		for(byte buff : bufferPage) {
 			if(buff == 1) {
 				Record record = new Record(this.relDef);
-				
 			}
 		}
 		
@@ -140,11 +140,11 @@ public class HeapFile {
 	 * Récupère tous les records du heapFile
 	 * @return ArrayList<Record> liste, une liste de Record
 	 */
-	public ArrayList<Record> getAllRecords(){
+	public Vector<Record> getAllRecords(){
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 		byte[]  buffheader = bm.getPage(headerPage);	
-		List <Record> listeDeRecords = new ArrayList <Record> ();
-		for (int i=1; i<=buffheader.lenght; i++){
+		Vector<Record> listeDeRecords = new Vector<Record>();
+		for (int i=1; i<=buffheader.length; i++){
 			listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
 		}
 	}

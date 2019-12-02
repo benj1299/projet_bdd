@@ -1,8 +1,11 @@
 package bdd;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Vector;
 import java.lang.*;
 
@@ -66,7 +69,6 @@ public class DBManager {
 			for(int i = 3; i < args.length; i++) {
 				typeColumn.add(args[i]);
 			}
-			
 			this.createRelation(relationName, nbColumn, typeColumn);
 		}
 
@@ -108,7 +110,72 @@ public class DBManager {
 		this.fm.reset();
 	}
 	
-	boolean deleteDirectory(File directoryToBeDeleted) {
+	public void insert(String relationName, Vector<Object> values) throws Exception {
+		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
+		RelDef currentRelation;
+		
+		while(relation.hasNext()) {
+			currentRelation = relation.next();
+			if(currentRelation.getName().equals(relationName)) {
+				Record record = new Record(currentRelation);
+				record.setValues(values);
+				this.fm.inserRecordInRelation(record, relationName);
+				break;
+			}
+		}
+	}
+	
+	public void select(String relationName, int idCol, String value) throws Exception {
+		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
+		RelDef currentRelation;
+		
+		while(relation.hasNext()) {
+			currentRelation = relation.next();
+			if(currentRelation.getName().equals(relationName)) {
+				this.fm.selectFromRelation(relationName, idCol, value);
+				break;
+			}
+		}
+	}
+	
+	public void insertAll(String relationName, String csvFilePath) throws Exception {
+		File csvFile = new File(csvFilePath);
+		if (csvFile.isFile()) {
+			String row;
+			Vector<Object> values = new Vector<Object>();
+			BufferedReader csvReader = new BufferedReader(new FileReader(csvFilePath));
+			
+			while ((row = csvReader.readLine()) != null) {
+			    String[] datas = row.split(",");
+			    for(String data : datas) {
+			    	values.add(data);
+			    }
+			    this.insert(relationName, values);
+			    values.clear();
+			}
+			csvReader.close();
+		}
+	}
+	
+	public void selectAll(String relationName) throws Exception {
+		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
+		RelDef currentRelation;
+		
+		while(relation.hasNext()) {
+			currentRelation = relation.next();
+			if(currentRelation.getName().equals(relationName)) {
+				Vector<Record> records = this.fm.selectAllFromRelation(relationName);
+				Iterator<Record> recordIt = records.iterator();
+				System.out.println("Total records = " + records.size());
+				while(recordIt.hasNext()) {
+					System.out.println(recordIt.next().toString() + ";");
+				}
+				break;
+			}
+		}
+	}
+	
+	private boolean deleteDirectory(File directoryToBeDeleted) {
 	    File[] allContents = directoryToBeDeleted.listFiles();
 	    if (allContents != null) {
 	        for (File file : allContents) {

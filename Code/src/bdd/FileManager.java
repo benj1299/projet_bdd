@@ -1,6 +1,7 @@
 package bdd;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Vector;
 
 public class FileManager {
 	private static FileManager instance;
@@ -78,7 +79,7 @@ public class FileManager {
 	 * @return liste de Record
 	 * @throws Exception
 	 */
-	public ArrayList<Record> selectAllFromRelation(String relName) throws Exception {
+	public Vector<Record> selectAllFromRelation(String relName) throws Exception {
 		for(HeapFile heapFile : this.heapFiles) {
 			if(heapFile.getRelDef().getName() == relName) {
 				return heapFile.getAllRecords();
