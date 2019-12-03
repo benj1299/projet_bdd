@@ -97,7 +97,7 @@ public class DBManager {
 			}
 		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount());		
 		this.dbdef.addRelation(relation);
-		this.fm.CreateRelationFile(relation);
+		this.fm.createRelationFile(relation);
 	}
 	
 	/**
@@ -120,6 +120,7 @@ public class DBManager {
 				Record record = new Record(currentRelation);
 				record.setValues(values);
 				this.fm.inserRecordInRelation(record, relationName);
+				System.out.println("Les données ont bien été ajouté à la base de données");
 				break;
 			}
 		}
@@ -132,7 +133,8 @@ public class DBManager {
 		while(relation.hasNext()) {
 			currentRelation = relation.next();
 			if(currentRelation.getName().equals(relationName)) {
-				this.fm.selectFromRelation(relationName, idCol, value);
+				Vector<Record> records = this.fm.selectFromRelation(relationName, idCol, value);
+				this.displayRecords(records);
 				break;
 			}
 		}
@@ -154,6 +156,9 @@ public class DBManager {
 			    values.clear();
 			}
 			csvReader.close();
+			System.out.println("Les données ont bien été ajouté à la base de données");
+		} else {
+			System.out.println("Une erreur s'est produite dans l'insertion des données");
 		}
 	}
 	
@@ -165,11 +170,8 @@ public class DBManager {
 			currentRelation = relation.next();
 			if(currentRelation.getName().equals(relationName)) {
 				Vector<Record> records = this.fm.selectAllFromRelation(relationName);
-				Iterator<Record> recordIt = records.iterator();
 				System.out.println("Total records = " + records.size());
-				while(recordIt.hasNext()) {
-					System.out.println(recordIt.next().toString() + ";");
-				}
+				this.displayRecords(records);
 				break;
 			}
 		}
@@ -183,5 +185,12 @@ public class DBManager {
 	        }
 	    }
 	    return directoryToBeDeleted.delete();
+	}
+	
+	private void displayRecords(Vector<Record> records) {
+		Iterator<Record> it = records.iterator();
+		while(it.hasNext()) {
+			System.out.println(it.next().toString() + ";"));
+		}
 	}
 }

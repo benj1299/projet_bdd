@@ -104,13 +104,13 @@ public class HeapFile {
 	}
 
 	/**
-	 * 
+	 * Récupère les records d'une page
 	 * @return ArrayList<Record> liste, une liste de Record
 	 * @throws Exception 
 	 */
 	public Vector<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
 		Vector<Record> records = new Vector<Record>();
-		byte [] bufferPage = this.bm.getPage(pageId);
+		byte[] bufferPage = this.bm.getPage(pageId);
 		
 		for(byte buff : bufferPage) {
 			if(buff == 1) {
@@ -141,12 +141,7 @@ public class HeapFile {
 	 * @return ArrayList<Record> liste, une liste de Record
 	 */
 	public Vector<Record> getAllRecords(){
-		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
-		byte[]  buffheader = bm.getPage(headerPage);	
-		Vector<Record> listeDeRecords = new Vector<Record>();
-		for (int i=1; i<=buffheader.length; i++){
-			listeDeRecords.addAll(buffheader[i].getRecordsInDataPage());
-		}
+		//Lister toutes les pages contenues dans le HeapFile et boucle avec getRecordsInDataPage et ensuite fusionner tous les tableaux dans un seul
 	}
 
 	/**

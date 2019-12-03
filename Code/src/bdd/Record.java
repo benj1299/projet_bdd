@@ -24,7 +24,7 @@ public class Record {
 	}
 	
 	/**
-	 * Lit les valeurs du Record depuis le buffer, l’une après l’autre, à partir de position.
+	 * Lit les valeurs du Record depuis le buffer, l’une après l’autre, à partir d'une position.
 	 * @param buff
 	 * @param pos
 	 */
@@ -64,5 +64,11 @@ public class Record {
 	
 	public void setValue(Object value) {
 		this.values.add(value);
-	}	
+	}
+	
+
+	@Override
+	public String toString() {
+		//Boucle affichant les valeurs du records via un System.out.println();
+	}
 }

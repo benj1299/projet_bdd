@@ -45,7 +45,7 @@ public class FileManager {
 	 * @param RelDef relDef
 	 * @throws IOException 
 	 */
-	public void CreateRelationFile(RelDef relDef) throws IOException{
+	public void createRelationFile(RelDef relDef) throws IOException{
 		HeapFile hp = new HeapFile(relDef);		
 		this.heapFiles.add(hp);	
 		this.heapFiles.get(heapFiles.size()-1).createNewOnDisk();
@@ -60,16 +60,13 @@ public class FileManager {
 
 	public Rid inserRecordInRelation(Record record, String relName) throws Exception {
 		Rid rid = null;
-		for(HeapFile heapFile : this.heapFiles){
-
-			if(heapFile.getRelDef().getName() == relName) {
+		for(HeapFile heapFile : this.heapFiles)
+			if(heapFile.getRelDef().getName() == relName)
 				rid =  heapFile.insertRecord(record);
-			}
-		}
-
-		if(rid == null) {
+		
+		if(rid == null)
 			throw new Exception("relation pas trouvé dans la liste");
-		}
+		
 		return rid;
 	}
 
@@ -98,8 +95,8 @@ public class FileManager {
 	 * @throws Exception 
 	 */
 
-	public ArrayList<Record> selectFromRelation(String relName, int idxCol, String valeur) throws Exception  {
-		ArrayList<Record> records = new ArrayList<>();
+	public Vector<Record> selectFromRelation(String relName, int idxCol, String valeur) throws Exception  {
+		Vector<Record> records = new Vector<Record>();
 		for(HeapFile heapFile : this.heapFiles) {
 
 			if(heapFile.getRelDef().getName() == relName) {
