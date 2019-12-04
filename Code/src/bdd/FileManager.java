@@ -116,4 +116,46 @@ public class FileManager {
 	public void reset() {
 		FileManager.instance = new FileManager();
 	}
+	
+	
+	
+	
+	/**
+	 * Permet de suprimer un record 
+	  @param Record record
+	 */
+	public boolean deleteRecord(Record record){
+		
+		for (HeapFile hp: heapFiles){
+			
+			if(hp.getRelDef().getName()==record.getRelation().getName()){
+				
+				for (int i=1; i<hp.size(); i++){
+					
+					byte[] buff = hp.getBm().getPage(new PageId(hp.getRelDef().getFileIdx(), i));
+					
+					for (int j=0; j<buff.length; j++){
+						
+						if(){
+							
+							buff[j]=0;
+							
+							hp.getBm().freePage(new PageId(hp.getRelDef().getFileIdx(), true));
+							
+							PageId headerPage = new PageId(hp.getRelDef().getFileIdx(), 0);
+							byte[] buffheader = bm.getPage(headerPage);
+							buffheader[i] -= 1;
+							
+							
+						}
+						
+						
+						
+						
+						
+					}
+					
+				}
+	
+	
 }
