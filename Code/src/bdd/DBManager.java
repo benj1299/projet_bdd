@@ -37,6 +37,40 @@ public class DBManager {
 		this.fm = FileManager.getInstance();
 	}
 
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		if(args[0].equals("delete")){
+			
+			ArrayList<Record> records = selectFromRelation(args[1], args[2], args[3]);
+			int compt=0;
+			for (Record r : records){
+				
+				r.deleteRecord();
+				compt++;
+			}
+				
+			
+			
+			
+			
+			
+		}
+		
+		
+		
+
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
 		this.dbdef.init();
 		this.fm.init();
