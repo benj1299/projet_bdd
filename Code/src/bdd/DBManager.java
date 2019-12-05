@@ -38,10 +38,21 @@ public class DBManager {
 	}
 
 	
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		
-		if(args[0].equals("delete")){
+		
+		String commande=args[0];
+		
+		switch (commande){
+		
+		
+		case "delete":
+			
+		
 			
 			ArrayList<Record> records = selectFromRelation(args[1], args[2], args[3]);
 			int compt=0;
@@ -50,25 +61,10 @@ public class DBManager {
 				r.deleteRecord();
 				compt++;
 			}
-				
 			
-			
-			
-			
-			
-		}
-		
-		
-		
-
+			break;		
 	}
-	
-	
-	
-	
-	
-	
-	
+}
 	
 	
 	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
