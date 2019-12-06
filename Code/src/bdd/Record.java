@@ -69,6 +69,11 @@ public class Record {
 
 	@Override
 	public String toString() {
-		//Boucle affichant les valeurs du records via un System.out.println();
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i<this.values.size();i++) {
+			sb.append(this.values.get(i)+" ; ");
+		}
+		return sb.toString();
 	}
+	
 }
