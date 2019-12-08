@@ -141,7 +141,25 @@ public class HeapFile {
 	 * @return ArrayList<Record> liste, une liste de Record
 	 */
 	public Vector<Record> getAllRecords(){
-		//Lister toutes les pages contenues dans le HeapFile et boucle avec getRecordsInDataPage et ensuite fusionner tous les tableaux dans un seul
+
+		
+		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
+		
+		byte[] buffHeader = this.bm.getPage(headerPage);
+		
+		Vector<Record> allrecords = new Vector<Record>();
+		
+		for (i=1; i<buffHeader.length-1;i++){
+			
+			allrecords.addAll(getRecordsInDataPage(new PageId(this.relDef.getFileIdx(), i)));
+			
+			
+		}
+		
+		
+		return allrecords;
+		
+	
 	}
 
 	/**
