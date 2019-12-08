@@ -185,6 +185,7 @@ public class DBManager {
 		for (Record r : records){
 			this.fm.deleteRecord(r);
 		}
+		System.out.println("Total deleted records = " + records.size());
 	}
 	
 	private boolean deleteDirectory(File directoryToBeDeleted) {
