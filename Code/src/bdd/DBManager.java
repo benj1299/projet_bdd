@@ -58,10 +58,6 @@ public class DBManager {
 	public boolean processCommand(String chaine) throws IOException {
 		String[] args = chaine.split(" ");
 
-		if(args[0].contentEquals("exit")) {
-			return false;
-		}
-		
 		switch(args[0]) {
 			case "exit" :
 				return false;
@@ -74,6 +70,8 @@ public class DBManager {
 				}
 				this.createRelation(relationName, nbColumn, typeColumn);
 				break;
+			default : 
+				return true;
 		}
 		return true;
 	}
@@ -143,6 +141,23 @@ public class DBManager {
 		}
 	}
 	
+	public void delete(String relationName, int idxCol, Object valeur) throws Exception {
+		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
+		RelDef currentRelation;
+		
+		while(relation.hasNext()) {
+			currentRelation = relation.next();
+			if(currentRelation.getName().equals(relationName)) {
+				Vector<Record> records = this.fm.selectFromRelation(relationName, idxCol, valeur);
+				for (Record r : records){
+					this.fm.deleteRecord(r);
+				}
+				System.out.println("Total deleted records = " + records.size());
+				break;
+			}
+		}
+	}
+	
 	public void insertAll(String relationName, String csvFilePath) throws Exception {
 		File csvFile = new File(csvFilePath);
 		if (csvFile.isFile()) {
@@ -180,14 +195,31 @@ public class DBManager {
 		}
 	}
 	
-	public void delete(String relationName, int idxCol, Object valeur) throws Exception {
-		Vector<Record> records = this.fm.selectFromRelation(relationName, idxCol, valeur);
-		for (Record r : records){
-			this.fm.deleteRecord(r);
-		}
-		System.out.println("Total deleted records = " + records.size());
+	/**
+	 * Créé un B+Tree résidant uniquement en mémoire
+	 * @param relationName
+	 * @param idxCol
+	 * @param order
+	 */
+	public void createIndex(String relationName, int idxCol, int order) {
+		
 	}
 	
+	/**
+	 * 
+	 * @param relationName
+	 * @param idxCol
+	 * @param valeur
+	 */
+	public void selectIndex(String relationName, int idxCol, Object valeur) {
+		
+	}
+	
+	/**
+	 * Supprime le contenu d'un dossier
+	 * @param directoryToBeDeleted
+	 * @return
+	 */
 	private boolean deleteDirectory(File directoryToBeDeleted) {
 	    File[] allContents = directoryToBeDeleted.listFiles();
 	    if (allContents != null) {
@@ -198,6 +230,10 @@ public class DBManager {
 	    return directoryToBeDeleted.delete();
 	}
 	
+	/**
+	 * Affiche un ensemble de records
+	 * @param records
+	 */
 	private void displayRecords(Vector<Record> records) {
 		Iterator<Record> it = records.iterator();
 		while(it.hasNext()) {

@@ -7,6 +7,7 @@ public class Record {
 	
 	private RelDef relation;
 	private Vector<Object> values; // Valeurs d'un record
+	private Rid rid;
 	
 	public Record(RelDef relation) {
 		this.relation = relation;
@@ -66,6 +67,19 @@ public class Record {
 		this.values.add(value);
 	}
 	
+	/**
+	 * @return the rid
+	 */
+	public Rid getRid() {
+		return rid;
+	}
+
+	/**
+	 * @param rid the rid to set
+	 */
+	public void setRid(Rid rid) {
+		this.rid = rid;
+	}
 
 	@Override
 	public String toString() {
