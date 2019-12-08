@@ -1,2 +1,0 @@
-Améliorations : 
-	- DBManager : processCommand -> Effectuer les vérifications des données pour chaque commande actionnable par processCommand

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Vector;
 import java.lang.*;
@@ -36,36 +37,6 @@ public class DBManager {
 		this.bm = BufferManager.getInstance();
 		this.fm = FileManager.getInstance();
 	}
-
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		
-		String commande=args[0];
-		
-		switch (commande){
-		
-		
-		case "delete":
-			
-		
-			
-			ArrayList<Record> records = selectFromRelation(args[1], args[2], args[3]);
-			int compt=0;
-			for (Record r : records){
-				
-				r.deleteRecord();
-				compt++;
-			}
-			
-			break;		
-	}
-}
-	
 	
 	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
 		this.dbdef.init();
@@ -91,17 +62,19 @@ public class DBManager {
 			return false;
 		}
 		
-		//Effectuer les vérifications des données de chaque paramètre
-		if(args[0].contentEquals("create")) {
-			String relationName = args[1];
-			int nbColumn = Integer.parseInt(args[2]);
-			Vector<String> typeColumn = new Vector<String>();
-			for(int i = 3; i < args.length; i++) {
-				typeColumn.add(args[i]);
-			}
-			this.createRelation(relationName, nbColumn, typeColumn);
+		switch(args[0]) {
+			case "exit" :
+				return false;
+			case "create":
+				String relationName = args[1];
+				int nbColumn = Integer.parseInt(args[2]);
+				Vector<String> typeColumn = new Vector<String>();
+				for(int i = 3; i < args.length; i++) {
+					typeColumn.add(args[i]);
+				}
+				this.createRelation(relationName, nbColumn, typeColumn);
+				break;
 		}
-
 		return true;
 	}
 
@@ -207,6 +180,13 @@ public class DBManager {
 		}
 	}
 	
+	public void delete(String relationName, int idxCol, Object valeur) throws Exception {
+		Vector<Record> records = this.fm.selectFromRelation(relationName, idxCol, valeur);
+		for (Record r : records){
+			this.fm.deleteRecord(r);
+		}
+	}
+	
 	private boolean deleteDirectory(File directoryToBeDeleted) {
 	    File[] allContents = directoryToBeDeleted.listFiles();
 	    if (allContents != null) {
@@ -220,7 +200,7 @@ public class DBManager {
 	private void displayRecords(Vector<Record> records) {
 		Iterator<Record> it = records.iterator();
 		while(it.hasNext()) {
-			System.out.println(it.next().toString() + ";"));
+			System.out.println(it.next().toString() + ";");
 		}
 	}
 }
