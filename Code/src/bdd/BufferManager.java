@@ -76,7 +76,7 @@ public class BufferManager {
 	}
 
 	/**
-	 * Décremente pinCount et actualise le flag dirty
+	 * Libère la page en décrémentant pinCount et actualise le flag dirty
 	 * @param pageId
 	 * @param valdirty
 	 */

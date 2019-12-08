@@ -7,6 +7,7 @@ public class FileManager {
 	private static FileManager instance;
 	private FileManager fileManager;
 	private ArrayList<HeapFile> heapFiles;
+	private BufferManager bm;
 
 	/**
 	 * Singleton de FileManager
@@ -25,6 +26,7 @@ public class FileManager {
 
 	public FileManager() {
 		this.fileManager = FileManager.getInstance();
+		this.bm = BufferManager.getInstance();
 		this.heapFiles = new ArrayList<>();
 	}
 
@@ -122,16 +124,16 @@ public class FileManager {
 	  @param Record record
 	 */
 	public boolean deleteRecord(Record record){
-		for (HeapFile hp: heapFiles){
-			if(hp.getRelDef().getName()==record.getRelation().getName()){
-				for (int i=1; i<hp.size(); i++){
-					byte[] buff = hp.getBm().getPage(new PageId(hp.getRelDef().getFileIdx(), i));
-					for (int j=0; j<buff.length; j++){
+		for (HeapFile hp: this.heapFiles){
+			if(hp.getRelDef().getName() == record.getRelation().getName()){
+				for (int i = 1; i < this.heapFiles.size(); i++){
+					byte[] buff = this.bm.getPage(new PageId(hp.getRelDef().getFileIdx(), i));
+					for (int j=0; j < buff.length; j++){
 						if(){
 							buff[j]=0;
-							hp.getBm().freePage(new PageId(hp.getRelDef().getFileIdx(), true));
+							this.bm.freePage(new PageId(hp.getRelDef().getFileIdx(), ), true);
 							PageId headerPage = new PageId(hp.getRelDef().getFileIdx(), 0);
-							byte[] buffheader = bm.getPage(headerPage);
+							byte[] buffheader = this.bm.getPage(headerPage);
 							buffheader[i] -= 1;	
 						}
 					}
