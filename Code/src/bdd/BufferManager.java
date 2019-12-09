@@ -28,7 +28,53 @@ public class BufferManager {
 	 * @return un des buffers associés à une case
 	 * @throws Exception 
 	 */
-	public byte[] getPage(PageId pageId) throws Exception {		
+	public byte[] getPage(PageId pageId) {
+		byte content[] = new byte[Constants.PAGE_SIZE];
+
+		for(Frame x : this.bufferPool)
+			if(x.getPageId() == pageId) {
+				x.increment();
+				return x.getBuff();		
+			}
+
+		if(this.bufferPool.size() < Constants.FRAME_COUNT) {
+			this.dkManager.readPage(pageId, content);
+			Frame frame = new Frame(content, pageId);
+			frame.increment();
+			this.bufferPool.add(frame);
+			return frame.getBuff();			
+		}
+		PageId pI = this.lRU();
+		for(Frame x : this.bufferPool) {
+			if(x.getPageId()==pI) {
+				this.bufferPool.remove(x);
+				this.dkManager.readPage(pageId, content);
+				Frame newFrame = new Frame(content, pageId);
+				newFrame.increment();
+				this.bufferPool.add(newFrame);
+				content = newFrame.getBuff();
+				
+				
+			}
+		}
+		
+		return content;
+		
+	}
+	/**
+	 * politique de remplacement des Frames dans le bufferpool
+	 * @return
+	 */
+	public PageId lRU() {
+		if(this.lru.isEmpty()) {
+			return null;
+		}
+		PageId pI = this.lru.firstElement();
+		this.lru.remove(pI);
+		return pI;
+		}
+	
+	public byte[] getPageClock(PageId pageId) throws Exception {		
 		byte content[] = new byte[Constants.PAGE_SIZE];
 		boolean exception = true;
 
