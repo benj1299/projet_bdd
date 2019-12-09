@@ -85,7 +85,7 @@ public class Record {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for(int i = 0; i<this.values.size();i++) {
-			sb.append(this.values.get(i)+" ; ");
+			sb.append(this.values.get(i) + " ;");
 		}
 		return sb.toString();
 	}

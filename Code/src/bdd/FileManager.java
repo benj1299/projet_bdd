@@ -124,13 +124,15 @@ public class FileManager {
 	/**
 	 * Permet de suprimer un record 
 	  @param Record record
+	 * @throws Exception 
 	 */
-	public boolean deleteRecord(Record record){
+	public boolean deleteRecord(Record record) throws Exception{
 		for(HeapFile heapFile : this.heapFiles) {
 			if(heapFile.getRelDef().getName() == record.getRelation().getName()) {
 				byte[] buff = this.bm.getPage(record.getRid().getPageId());
+				
 				for(int i = record.getRid().getSlotIdx(); i < record.getRid().getSlotIdx() + record.getRelation().getRecordSize(); i++) {
-					
+					buff[i] = 0;
 				}
 				
 				PageId headerPage = new PageId(heapFile.getRelDef().getFileIdx(), 0);
@@ -139,26 +141,9 @@ public class FileManager {
 				
 				this.bm.freePage(record.getRid().getPageId(), true);
 				this.bm.freePage(headerPage, true);
-
-			}
-		}		
-		
-		for (HeapFile hp: this.heapFiles){
-			if(hp.getRelDef().getName() == record.getRelation().getName()){
-				for (int i = 1; i < this.heapFiles.size(); i++){
-					byte[] buff = this.bm.getPage(record.getRid().getPageId());
-					for (int j=0; j < buff.length; j++){
-						if(){
-							buff[j]=0;
-							this.bm.freePage(new PageId(hp.getRelDef().getFileIdx(), ), true);
-							PageId headerPage = new PageId(hp.getRelDef().getFileIdx(), 0);
-							byte[] buffheader = this.bm.getPage(headerPage);
-							buffheader[i] -= 1;	
-						}
-					}
-					
-				}
+				return true;
 			}
 		}
+		return false;
 	}
 }

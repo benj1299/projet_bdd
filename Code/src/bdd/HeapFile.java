@@ -142,27 +142,18 @@ public class HeapFile {
 	/**
 	 * Récupère tous les records du heapFile
 	 * @return ArrayList<Record> liste, une liste de Record
+	 * @throws Exception 
 	 */
-	public Vector<Record> getAllRecords(){
-
-		
+	public Vector<Record> getAllRecords() throws Exception{
 		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
-		
 		byte[] buffHeader = this.bm.getPage(headerPage);
-		
 		Vector<Record> allrecords = new Vector<Record>();
 		
-		for (i=1; i<buffHeader.length-1;i++){
-			
-			allrecords.addAll(getRecordsInDataPage(new PageId(this.relDef.getFileIdx(), i)));
-			
-			
+		for (int i=1; i < buffHeader.length; i++){
+			allrecords.addAll(this.getRecordsInDataPage(new PageId(this.relDef.getFileIdx(), i)));
 		}
 		
-		
 		return allrecords;
-		
-	
 	}
 
 	/**

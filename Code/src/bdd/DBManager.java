@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.lang.*;
@@ -200,9 +201,23 @@ public class DBManager {
 	 * @param relationName
 	 * @param idxCol
 	 * @param order
+	 * @throws Exception 
 	 */
-	public void createIndex(String relationName, int idxCol, int order) {
+	public void createIndex(String relationName, int idCol, int order) throws Exception {
+		Vector<Rid> rids = new Vector<Rid>();
+		BTree<Integer, Vector<Rid>> btree = new BTree<Integer, Vector<Rid>>();
 		
+		Vector<Record> records = this.fm.selectAllFromRelation(relationName);
+		
+		for(Record r : records)
+				rids.add(r.getRid());
+		
+		btree.put(idCol, rids);
+		
+		// Créé tableau résident en mémoire stockant les pointeurs de records avec la même clé dans une même entrée.
+		// FORMAT : <clé, liste de rid>
+		// On ne garde pas à jour l'index avec les insertions dans la relation qui apparaissent après createIndex()
+		// il peut y avoir plusieurs index dans la DB, pour la même relation mais avec des colonnes différentes
 	}
 	
 	/**
@@ -212,7 +227,7 @@ public class DBManager {
 	 * @param valeur
 	 */
 	public void selectIndex(String relationName, int idxCol, Object valeur) {
-		
+
 	}
 	
 	/**
