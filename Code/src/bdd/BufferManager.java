@@ -6,6 +6,7 @@ public class BufferManager {
 	private Vector<Frame> bufferPool;
 	private DiskManager dkManager;
 	private Vector<PageId> lru;
+	
 	public static BufferManager getInstance(){
 		if (instance == null) {
 			synchronized(BufferManager.class) {
