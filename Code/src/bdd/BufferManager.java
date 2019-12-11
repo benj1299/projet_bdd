@@ -5,7 +5,7 @@ public class BufferManager {
 	private static BufferManager instance; 	
 	private Vector<Frame> bufferPool;
 	private DiskManager dkManager;
-
+	private Vector<PageId> lru;
 	public static BufferManager getInstance(){
 		if (instance == null) {
 			synchronized(BufferManager.class) {
@@ -20,6 +20,7 @@ public class BufferManager {
 	public BufferManager() {
 		this.bufferPool = new Vector<Frame>();
 		this.dkManager = DiskManager.getInstance();
+		this.lru = new Vector<>();
 	}
 	/**
 	 * Rempli (ou remplace si besoin) le buffer correspondant à la bonne frame 
