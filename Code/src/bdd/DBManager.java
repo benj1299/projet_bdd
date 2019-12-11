@@ -255,4 +255,30 @@ public class DBManager {
 			System.out.println(it.next().toString() + ";");
 		}
 	}
+	
+	public static void main (String[] args) {
+		DBManager dbmanager = DBManager.getInstance();
+		try {
+			dbmanager.processCommand("clean");
+			dbmanager.processCommand("create R 3 int string3 int");
+			dbmanager.processCommand("insert R 1 aab 2");
+			dbmanager.processCommand("insert R 2 abc 2");
+			dbmanager.processCommand("insert R 1 agh 1");
+			dbmanager.processCommand("selectall R");
+			dbmanager.processCommand("select R 1 1");
+			dbmanager.processCommand("select R 3 1");
+			dbmanager.processCommand("create S 8 string2 int string4 float string5 int int int");
+			dbmanager.processCommand("insertall S S1.csv");
+			dbmanager.processCommand("selectall S");
+			dbmanager.processCommand("select S 2 19");
+			dbmanager.processCommand("select S 3 Nati");
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+
 }
