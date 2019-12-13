@@ -1,4 +1,6 @@
 package bdd;
+import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -30,15 +32,41 @@ public class DBDef {
 		this.count = 0;
 	}
 	
-	public void init() throws FileNotFoundException, IOException, ClassNotFoundException{
-    	FileInputStream fis = new FileInputStream(Constants.DB_DIRECTORY +"Catalog.def");
-    	ObjectInputStream ois = new ObjectInputStream(fis);
-    	DBDef.instance = (DBDef) ois.readObject();
-    	ois.close();	
+	public void init() throws FileNotFoundException, IOException, ClassNotFoundException {
+		String input = Constants.DB_DIRECTORY +"Catalog.def";
+		File file = new File(input);
+
+		if(!file.exists()) {
+			return;
+		} 
+		
+       	try {
+       		FileInputStream fis = new FileInputStream(input);
+        	ObjectInputStream ois = new ObjectInputStream(fis);
+
+    	    Object o;
+    	    while ((o = ois.readObject()) != null) {
+    	        if (o instanceof DBDef) {
+    	        	DBDef m = (DBDef) ois.readObject();
+    	        }
+    	    }
+        	ois.close();
+    	} 
+    	catch (EOFException eofex) {}
+    	catch (IOException ioex) {
+    	    throw ioex;
+    	}
 	}
 	
 	public void finish() throws FileNotFoundException, IOException {
-		FileOutputStream fos = new FileOutputStream(Constants.DB_DIRECTORY +"Catalog.def");
+		String input = Constants.DB_DIRECTORY +"Catalog.def";
+		File file = new File(input);
+
+		if(!file.exists()) {
+		    file.createNewFile();
+		}
+		
+		FileOutputStream fos = new FileOutputStream(input);
 		ObjectOutputStream oos = new ObjectOutputStream(fos);
 		oos.writeObject(DBDef.instance);
 		oos.close();

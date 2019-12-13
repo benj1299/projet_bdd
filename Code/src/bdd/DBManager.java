@@ -5,11 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
-import java.lang.*;
 
 public class DBManager {
 
@@ -54,16 +51,17 @@ public class DBManager {
 	 * 
 	 * @param chaine - Exemple : create NomRelation NbCol TypeColl[1] TypeCol[2] ... TypeCol[NbCol]
 	 * @return boolean
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public boolean processCommand(String chaine) throws IOException {
+	public boolean processCommand(String chaine) throws Exception {
 		String[] args = chaine.split(" ");
+		String relationName = args[1];
 
 		switch(args[0]) {
 			case "exit" :
 				return false;
+				
 			case "create":
-				String relationName = args[1];
 				int nbColumn = Integer.parseInt(args[2]);
 				Vector<String> typeColumn = new Vector<String>();
 				for(int i = 3; i < args.length; i++) {
@@ -71,6 +69,51 @@ public class DBManager {
 				}
 				this.createRelation(relationName, nbColumn, typeColumn);
 				break;
+				
+			case "insert":
+				Vector<Object> values = new Vector<Object>();
+				for(int i = 2; i < args.length; i++) {
+					values.add(args[i]);
+				}
+				this.insert(relationName, values);
+				break;
+				
+			case "insertall":
+				String csvFilePath = args[2];
+				this.insertAll(relationName, csvFilePath);
+				break;
+				
+			case "select":
+				int idCol = Integer.parseInt(args[2]);
+				String value = args[3];
+				this.select(relationName, idCol, value);
+				break;
+			
+			case "selectall":
+				this.selectAll(relationName);
+				break;
+			
+			case "delete":
+				int idxCol = Integer.parseInt(args[2]);
+				Object valeur = args[3];
+				this.delete(relationName, idxCol, valeur);
+				break;
+				
+			case "createindex":
+				int indexCol = Integer.parseInt(args[2]);
+				int order = Integer.parseInt(args[3]);				
+				this.createIndex(relationName, indexCol, order);
+				
+			case "selectindex":
+				int indexColonne = Integer.parseInt(args[2]);
+				Object valeurIndex = args[3];
+				this.selectIndex(relationName, indexColonne, valeurIndex);
+				
+			case "clean": 
+				this.clean();
+				System.out.println("La base de donnée a bien été nettoyée");
+				break;
+				
 			default : 
 				return true;
 		}
@@ -255,30 +298,4 @@ public class DBManager {
 			System.out.println(it.next().toString() + ";");
 		}
 	}
-	
-	public static void main (String[] args) {
-		DBManager dbmanager = DBManager.getInstance();
-		try {
-			dbmanager.processCommand("clean");
-			dbmanager.processCommand("create R 3 int string3 int");
-			dbmanager.processCommand("insert R 1 aab 2");
-			dbmanager.processCommand("insert R 2 abc 2");
-			dbmanager.processCommand("insert R 1 agh 1");
-			dbmanager.processCommand("selectall R");
-			dbmanager.processCommand("select R 1 1");
-			dbmanager.processCommand("select R 3 1");
-			dbmanager.processCommand("create S 8 string2 int string4 float string5 int int int");
-			dbmanager.processCommand("insertall S S1.csv");
-			dbmanager.processCommand("selectall S");
-			dbmanager.processCommand("select S 2 19");
-			dbmanager.processCommand("select S 3 Nati");
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
-
 }

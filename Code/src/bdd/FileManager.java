@@ -1,12 +1,10 @@
 package bdd;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Vector;
 
 public class FileManager {
 	private static FileManager instance;
-	private FileManager fileManager;
 	private ArrayList<HeapFile> heapFiles;
 	private BufferManager bm;
 
@@ -18,7 +16,7 @@ public class FileManager {
 		if (instance == null) {
 			synchronized(FileManager.class) {
 				if (instance == null) {
-					instance = new FileManager() ;
+					instance = new FileManager();
 				}
 			}
 		}
@@ -26,7 +24,6 @@ public class FileManager {
 	}
 
 	public FileManager() {
-		this.fileManager = FileManager.getInstance();
 		this.bm = BufferManager.getInstance();
 		this.heapFiles = new ArrayList<>();
 	}
