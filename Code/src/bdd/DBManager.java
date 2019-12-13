@@ -36,6 +36,27 @@ public class DBManager {
 		this.fm = FileManager.getInstance();
 	}
 	
+	
+		/**fonction permettant de retourner un HeapFile en connaissant son nom
+	@args name
+	* */	
+	
+	public HeapFile getHeapFileViaName (String name ){
+		
+		RelDef rd = dbdef.getRelDefviaName( name);
+			
+		for (HeapFile hp : fm.getHeapFiles()){
+			
+			if (hp.getRelDef().equals(rd)) return hp;
+				
+		}
+		return null;	
+	}
+	
+	
+	
+	
+	
 	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
 		this.dbdef.init();
 		this.fm.init();
