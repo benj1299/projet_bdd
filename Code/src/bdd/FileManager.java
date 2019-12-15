@@ -61,8 +61,9 @@ public class FileManager {
 	public Rid inserRecordInRelation(Record record, String relName) throws Exception {
 		Rid rid = null;
 		for(HeapFile heapFile : this.heapFiles) {
-			if(heapFile.getRelDef().getName() == relName)
+			if(heapFile.getRelDef().getName().equals(relName)) {
 				rid = heapFile.insertRecord(record);
+			}
 		}
 		
 		if(rid == null)
