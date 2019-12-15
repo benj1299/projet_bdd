@@ -1,4 +1,5 @@
 package bdd;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Vector;
@@ -17,11 +18,22 @@ public class Record {
 	 * Ecrit les valeurs du Record dans le buffer, l’une après l’autre, à partir de position.
 	 * @param buff
 	 * @param pos
+	 * @throws Exception 
 	 */
-	public void writeToBuffer(byte[] buff, int pos) {
+	public void writeToBuffer(byte[] buff, int pos) throws Exception {
 	    ByteBuffer bbuf = ByteBuffer.allocate(buff.length);
-	    bbuf.position(pos);
-	    bbuf.put(buff);
+	    if(pos < buff.length) {
+	    	bbuf.position(pos);
+		    try {
+			    bbuf.put(buff).rewind();
+		    }
+		    catch (BufferOverflowException e) { 
+	            e.printStackTrace();
+	        } 
+	    }
+	    else {
+	    	System.out.println("Une erreur s'est produite : la position d'écriture du buffer est supérieur à sa taille");
+	    }
 	}
 	
 	/**

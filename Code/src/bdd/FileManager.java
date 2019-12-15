@@ -60,9 +60,11 @@ public class FileManager {
 
 	public Rid inserRecordInRelation(Record record, String relName) throws Exception {
 		Rid rid = null;
-		for(HeapFile heapFile : this.heapFiles)
+		for(HeapFile heapFile : this.heapFiles) {
 			if(heapFile.getRelDef().getName() == relName)
-				rid =  heapFile.insertRecord(record);
+				System.out.println("test");
+				rid = heapFile.insertRecord(record);
+		}
 		
 		if(rid == null)
 			throw new Exception("La relation n'a pas été trouvé dans la liste");

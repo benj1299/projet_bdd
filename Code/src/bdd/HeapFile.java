@@ -93,7 +93,7 @@ public class HeapFile {
 	 */
 	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception{
 		byte[] pageBuffer = this.bm.getPage(pageId);
-		record.writeToBuffer(this.bm.getPage(pageId), pageBuffer.length);
+		record.writeToBuffer(this.bm.getPage(pageId), pageId.getPageIdx());
 		this.bm.freePage(pageId, true);
 
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
