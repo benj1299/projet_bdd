@@ -62,7 +62,6 @@ public class FileManager {
 		Rid rid = null;
 		for(HeapFile heapFile : this.heapFiles) {
 			if(heapFile.getRelDef().getName() == relName)
-				System.out.println("test");
 				rid = heapFile.insertRecord(record);
 		}
 		

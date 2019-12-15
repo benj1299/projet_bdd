@@ -55,14 +55,11 @@ public class BufferManager {
 				newFrame.increment();
 				this.bufferPool.add(newFrame);
 				content = newFrame.getBuff();
-				
-				
 			}
 		}
-		
 		return content;
-		
 	}
+	
 	/**
 	 * politique de remplacement des Frames dans le bufferpool
 	 * @return

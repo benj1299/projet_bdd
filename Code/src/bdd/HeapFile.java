@@ -2,6 +2,7 @@ package bdd;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -93,7 +94,7 @@ public class HeapFile {
 	 */
 	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception{
 		byte[] pageBuffer = this.bm.getPage(pageId);
-		record.writeToBuffer(this.bm.getPage(pageId), pageId.getPageIdx());
+		record.writeToBuffer(pageBuffer, pageId.getPageIdx());
 		this.bm.freePage(pageId, true);
 
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);

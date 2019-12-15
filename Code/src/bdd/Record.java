@@ -2,12 +2,13 @@ package bdd;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class Record {
 	
 	private RelDef relation;
-	private Vector<Object> values; // Valeurs d'un record
+	private Vector<Object> values;
 	private Rid rid;
 	
 	public Record(RelDef relation) {
@@ -25,7 +26,8 @@ public class Record {
 	    if(pos < buff.length) {
 	    	bbuf.position(pos);
 		    try {
-			    bbuf.put(buff).rewind();
+			    bbuf.put(buff);
+			    bbuf.rewind();
 		    }
 		    catch (BufferOverflowException e) { 
 	            e.printStackTrace();
