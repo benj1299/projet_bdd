@@ -32,6 +32,25 @@ public class DBDef {
 		this.count = 0;
 	}
 	
+	
+	
+	
+	/**fonction permettant de retourner un RelDef en connaissant son nom
+	@args name
+	a mettre dansDBdef
+	 * 
+	 */	
+	public RelDef getRelDefviaName(String name){
+
+		for (RelDef rd : tabRelDef){
+
+			if (rd.getName().equals(name)) return rd;
+
+		}
+	}
+	
+	
+	
 	public void init() throws FileNotFoundException, IOException, ClassNotFoundException {
 		String input = Constants.DB_DIRECTORY +"Catalog.def";
 		File file = new File(input);
