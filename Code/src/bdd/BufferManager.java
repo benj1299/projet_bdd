@@ -127,7 +127,7 @@ public class BufferManager {
 	 */
 	public void freePage(PageId pageId, boolean valdirty) {
 		for(Frame x : this.bufferPool) {
-			if(x.getPageId() == pageId) {
+			if(x.getPageId().equals(pageId)) {
 				x.decrement();
 				x.setDirty(valdirty);
 				if(x.getPinCount() == 0) {
