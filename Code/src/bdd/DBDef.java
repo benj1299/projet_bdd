@@ -1,5 +1,4 @@
 package bdd;
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,7 +9,9 @@ import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
 
 public class DBDef {
-	private static DBDef instance ;
+	private static DBDef instance;
+	private Vector<RelDef> tabRelDef;
+	private int count;
 	 
 	public static DBDef getInstance() {
       if (instance == null) {
@@ -23,30 +24,13 @@ public class DBDef {
       return instance ;
    }
 	
-	private Vector<RelDef> tabRelDef;
-	private int count;
-	
 	public DBDef() {
 		this.tabRelDef = new Vector<RelDef>();
 		this.count = 0;
 	}
 	
-	
-	
-	
-	/**fonction permettant de retourner un RelDef en connaissant son nom
-	@args name
-	a mettre dansDBdef
-	 * 
-	 */	
-	public RelDef getRelDefviaName(String name){
-		for (RelDef rd : this.tabRelDef){
-			if (rd.getName().equals(name)) return rd;
-		}
-	}
-	
 	public void init() throws FileNotFoundException, IOException, ClassNotFoundException {
-		String input = Constants.DB_DIRECTORY +"Catalog.def";
+		String input = Constants.DB_DIRECTORY + "Catalog.def";
 		File file = new File(input);
 
 		if(!file.exists()) {
@@ -54,35 +38,39 @@ public class DBDef {
 		} 
 		
        	try {
-       		FileInputStream fis = new FileInputStream(input);
-        	ObjectInputStream ois = new ObjectInputStream(fis);
+       		FileInputStream fichier = new FileInputStream(input);
+        	ObjectInputStream ois = new ObjectInputStream(fichier);
+        	DBDef.instance = (DBDef) ois.readObject();
+        	if (ois != null) {
+                ois.close();
+            }
 
-    	    Object o;
-    	    while ((o = ois.readObject()) != null) {
-    	        if (o instanceof DBDef) {
-    	        	DBDef m = (DBDef) ois.readObject();
-    	        }
-    	    }
-        	ois.close();
-    	} 
-    	catch (EOFException eofex) {}
-    	catch (IOException ioex) {
-    	    throw ioex;
-    	}
+       	} catch (final java.io.IOException e) {
+            e.printStackTrace();
+        } catch (final ClassNotFoundException e) {
+          e.printStackTrace();
+        }
 	}
 	
 	public void finish() throws FileNotFoundException, IOException {
-		String input = Constants.DB_DIRECTORY +"Catalog.def";
+		String input = Constants.DB_DIRECTORY + "Catalog.def";
 		File file = new File(input);
-
+	    
 		if(!file.exists()) {
 		    file.createNewFile();
 		}
 		
-		FileOutputStream fos = new FileOutputStream(input);
-		ObjectOutputStream oos = new ObjectOutputStream(fos);
-		oos.writeObject(DBDef.instance);
-		oos.close();
+		try {
+			FileOutputStream fichier = new FileOutputStream(input);
+			ObjectOutputStream oos = new ObjectOutputStream(fichier);
+			oos.writeObject(DBDef.instance);
+			if (oos != null) {
+	          oos.flush();
+	          oos.close();
+	        }
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -100,8 +88,20 @@ public class DBDef {
 	public void reset() {
 		DBDef.instance = new DBDef();
 	}
-	// Getters / Setters
 	
+	/**
+	 * Fonction permettant de retourner un RelDef en connaissant son nom
+	 * @args name a mettre dans DBdef
+	 * 
+	 */	
+	public RelDef getRelDefviaName(String name){
+		for (RelDef rd : this.tabRelDef){
+			if (rd.getName().equals(name)) return rd;
+		}
+		return null;
+	}
+	
+	// Getters / Setters
 	/**
 	 * 
 	 * @return Vector
