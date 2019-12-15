@@ -144,7 +144,7 @@ public class DBManager {
 			}
 			else if(typeColumnValue.equals("string")) {
 				int tall = Character.getNumericValue(typeColumnValue.charAt(6));
-				recordSize += tall*2;	
+				recordSize += tall*2;
 			}
 			
 		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount());		
