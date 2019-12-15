@@ -34,7 +34,7 @@ public class BufferManager {
 		byte content[] = new byte[Constants.PAGE_SIZE];
 
 		for(Frame x : this.bufferPool)
-			if(x.getPageId() == pageId) {
+			if(x.getPageId().equals(pageId)) {
 				x.increment();
 				return x.getBuff();		
 			}
@@ -48,7 +48,7 @@ public class BufferManager {
 		}
 		PageId pI = this.lRU();
 		for(Frame x : this.bufferPool) {
-			if(x.getPageId()==pI) {
+			if(x.getPageId().equals(pI)) {
 				this.bufferPool.remove(x);
 				this.dkManager.readPage(pageId, content);
 				Frame newFrame = new Frame(content, pageId);
@@ -78,7 +78,7 @@ public class BufferManager {
 		boolean exception = true;
 
 		for(Frame x : this.bufferPool)
-			if(x.getPageId() == pageId) {
+			if(x.getPageId().equals(pageId)) {
 				x.increment();
 				return x.getBuff();		
 			}
