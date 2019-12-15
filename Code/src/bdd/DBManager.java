@@ -144,7 +144,7 @@ public class DBManager {
 			}
 			else if(typeColumnValue.equals("string")) {
 				int tall = Character.getNumericValue(typeColumnValue.charAt(6));
-				recordSize += tall*2;
+				recordSize += tall*2;	
 			}
 			
 		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount());		
@@ -340,12 +340,8 @@ public class DBManager {
 		
 		createRelation( RN1+RN2,  hp1.getRelDef().getNbColumn()+hp2.getRelDef().getNbColumn(), hp1.getRelDef().getTypeColumn().addAll(hp2.getRelDef().getTypeColumn()));
 	
-		
-		
-		
 		RelDef redjoin = getRelDefviaName(RN1+RN2);
 
-		
 		for (int i = 1; i<bufferHeader1[0]; i++){
 			
 			//byte pagern1 = getPage (new PageId(hp1.getRelDef().getFileIdx(), i));
