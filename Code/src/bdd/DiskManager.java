@@ -29,7 +29,7 @@ public class DiskManager {
             File file = getFile(fileIdx);
             file.createNewFile();
           } catch (IOException e) {
-            System.out.println("Une erreur est apparue.");
+            System.out.println("Une erreur est apparue pour la création d'un fichier.");
             e.printStackTrace();
           }
     }
@@ -112,6 +112,10 @@ public class DiskManager {
      * @return le fichier de la page demandé selon son index
      */
     private static File getFile(int fileIdx){
+      File directory = new File(Constants.DB_DIRECTORY);
+      if(!directory.exists()) {
+    	  directory.mkdir();
+      }
       String fileName = "Data_" + fileIdx + ".rf";
       File file = new File(Constants.DB_DIRECTORY + fileName);
       return file;

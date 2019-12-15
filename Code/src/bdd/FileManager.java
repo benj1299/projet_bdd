@@ -65,7 +65,7 @@ public class FileManager {
 				rid =  heapFile.insertRecord(record);
 		
 		if(rid == null)
-			throw new Exception("relation pas trouvé dans la liste");
+			throw new Exception("La relation n'a pas été trouvé dans la liste");
 		
 		record.setRid(rid);
 		return rid;

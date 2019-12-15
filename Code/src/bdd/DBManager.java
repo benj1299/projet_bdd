@@ -37,6 +37,10 @@ public class DBManager {
 	}
 	
 	public void init() throws FileNotFoundException, ClassNotFoundException, IOException {
+		File directory = new File(Constants.DB_DIRECTORY);
+	      if(!directory.exists()) {
+	    	  directory.mkdir();
+	    }
 		this.dbdef.init();
 		this.fm.init();
 	}
@@ -55,7 +59,6 @@ public class DBManager {
 	 */
 	public boolean processCommand(String chaine) throws Exception {
 		String[] args = chaine.split(" ");
-		String relationName = args[1];
 
 		switch(args[0]) {
 			case "exit" :
@@ -67,7 +70,7 @@ public class DBManager {
 				for(int i = 3; i < args.length; i++) {
 					typeColumn.add(args[i]);
 				}
-				this.createRelation(relationName, nbColumn, typeColumn);
+				this.createRelation(args[1], nbColumn, typeColumn);
 				break;
 				
 			case "insert":
@@ -75,39 +78,39 @@ public class DBManager {
 				for(int i = 2; i < args.length; i++) {
 					values.add(args[i]);
 				}
-				this.insert(relationName, values);
+				this.insert(args[1], values);
 				break;
 				
 			case "insertall":
 				String csvFilePath = args[2];
-				this.insertAll(relationName, csvFilePath);
+				this.insertAll(args[1], csvFilePath);
 				break;
 				
 			case "select":
 				int idCol = Integer.parseInt(args[2]);
 				String value = args[3];
-				this.select(relationName, idCol, value);
+				this.select(args[1], idCol, value);
 				break;
 			
 			case "selectall":
-				this.selectAll(relationName);
+				this.selectAll(args[1]);
 				break;
 			
 			case "delete":
 				int idxCol = Integer.parseInt(args[2]);
 				Object valeur = args[3];
-				this.delete(relationName, idxCol, valeur);
+				this.delete(args[1], idxCol, valeur);
 				break;
 				
 			case "createindex":
 				int indexCol = Integer.parseInt(args[2]);
 				int order = Integer.parseInt(args[3]);				
-				this.createIndex(relationName, indexCol, order);
+				this.createIndex(args[1], indexCol, order);
 				
 			case "selectindex":
 				int indexColonne = Integer.parseInt(args[2]);
 				Object valeurIndex = args[3];
-				this.selectIndex(relationName, indexColonne, valeurIndex);
+				this.selectIndex(args[1], indexColonne, valeurIndex);
 				
 			case "clean": 
 				this.clean();
@@ -132,14 +135,18 @@ public class DBManager {
 	 */
 	public void createRelation(String name, int nbColumn, Vector<String> typeColumn) throws IOException{
 		int recordSize = 0;
+		String typeColumnValue = null;
+		
 		for (int i = 0; i < nbColumn; i++)
-			if (typeColumn.get(i).equals("float") || typeColumn.get(i).equals("int")) {
+			typeColumnValue = typeColumn.get(i).toLowerCase();
+			if (typeColumnValue.equals("float") || typeColumnValue.equals("int")) {
 				recordSize += 4;
 			}
-			else {
-				String mots[] = typeColumn.get(i).split("");
-				recordSize += Integer.parseInt(mots[6])*2;	
+			else if(typeColumnValue.equals("string")) {
+				int tall = Character.getNumericValue(typeColumnValue.charAt(6));
+				recordSize += tall*2;	
 			}
+			
 		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount());		
 		this.dbdef.addRelation(relation);
 		this.fm.createRelationFile(relation);

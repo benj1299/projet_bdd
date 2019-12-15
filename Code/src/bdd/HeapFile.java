@@ -163,5 +163,4 @@ public class HeapFile {
 	public RelDef getRelDef() {
 		return this.relDef;
 	}
-
 }
