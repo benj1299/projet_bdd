@@ -42,13 +42,9 @@ public class DBManager {
 	* */	
 	
 	public HeapFile getHeapFileViaName (String name ){
-		
-		RelDef rd = dbdef.getRelDefviaName( name);
-			
+		RelDef rd = dbdef.getRelDefviaName(name);
 		for (HeapFile hp : fm.getHeapFiles()){
-			
 			if (hp.getRelDef().equals(rd)) return hp;
-				
 		}
 		return null;	
 	}

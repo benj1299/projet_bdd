@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.Vector;
 import java.io.ObjectOutputStream;
-import java.io.ObjectInputStream;
 import java.io.FileOutputStream;
 
 public class DBDef {
@@ -41,15 +40,10 @@ public class DBDef {
 	 * 
 	 */	
 	public RelDef getRelDefviaName(String name){
-
-		for (RelDef rd : tabRelDef){
-
+		for (RelDef rd : this.tabRelDef){
 			if (rd.getName().equals(name)) return rd;
-
 		}
 	}
-	
-	
 	
 	public void init() throws FileNotFoundException, IOException, ClassNotFoundException {
 		String input = Constants.DB_DIRECTORY +"Catalog.def";

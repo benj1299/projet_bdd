@@ -143,4 +143,19 @@ public class FileManager {
 		}
 		return false;
 	}
+
+	/**
+	 * @return the heapFiles
+	 */
+	public ArrayList<HeapFile> getHeapFiles() {
+		return heapFiles;
+	}
+
+	/**
+	 * @param heapFiles the heapFiles to set
+	 */
+	public void setHeapFiles(ArrayList<HeapFile> heapFiles) {
+		this.heapFiles = heapFiles;
+	}
+	
 }
