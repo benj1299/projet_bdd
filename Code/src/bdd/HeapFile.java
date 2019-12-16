@@ -115,9 +115,11 @@ public class HeapFile {
 		Vector<Record> records = new Vector<Record>();
 		byte[] bufferPage = this.bm.getPage(pageId);
 		int pos = 0;
+		int notEmptySlot = this.relDef.getMaxSlotCount() - this.relDef.getSlotCount();
 		
-		for(int i = 0; i < this.relDef.getSlotCount(); i++) {
+		for(int i = 0; i < notEmptySlot; i++) {
 			Record rd = new Record(this.relDef);
+			pos = rd.getRelation().getRecordSize()*i;
 			rd.readFromBuffer(bufferPage, pos);
 			records.add(rd);
 		}
