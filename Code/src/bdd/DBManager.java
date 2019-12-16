@@ -30,7 +30,7 @@ public class DBManager {
 	}
 
 	public DBManager() {
-		this.dbdef = new DBDef();
+		this.dbdef = DBDef.getInstance();
 		this.bm = BufferManager.getInstance();
 		this.fm = FileManager.getInstance();
 	}
@@ -141,7 +141,7 @@ public class DBManager {
 			if (typeColumnValue.equals("float") || typeColumnValue.equals("int")) {
 				recordSize += 4;
 			}
-			else if(typeColumnValue.equals("string")) {
+			else if(typeColumnValue.substring(0, 5).equals("string")) {
 				int tall = Character.getNumericValue(typeColumnValue.charAt(6));
 				recordSize += tall*2;	
 			}
@@ -226,7 +226,7 @@ public class DBManager {
 			csvReader.close();
 			System.out.println("Les données ont bien été ajouté à la base de données");
 		} else {
-			System.out.println("Une erreur s'est produite dans l'insertion des données");
+			System.out.println("Une erreur s'est produite dans l'insertion des données du fichier csv");
 		}
 	}
 	
@@ -280,6 +280,66 @@ public class DBManager {
 	}
 	
 	/**
+	 * Permet de cree une jointure entre 2 relations
+	 * @param RN1
+	 * @param RN2
+	 * @param indicecol1
+	 * @param indicecol2	
+	 * @throws Exception 
+	*/
+	public void join (String RN1, String RN2, int indicecol1, int indicecol2) throws Exception{
+		Vector<Record> vecteurjoin = new Vector <Record>(); 
+		Vector<String> typeColumn = new Vector<String>();
+		String relname = RN1+RN2;
+
+		HeapFile hp1 = getHeapFileViaName(RN1);
+		HeapFile hp2 = getHeapFileViaName(RN2);
+		
+		int nbColumn = hp1.getRelDef().getNbColumn()+hp2.getRelDef().getNbColumn();
+
+		byte [] bufferHeader1 = this.bm.getPage(new PageId (hp1.getRelDef().getFileIdx(), 0));
+		byte [] bufferHeader2 = this.bm.getPage(new PageId (hp2.getRelDef().getFileIdx(), 0));
+
+		RelDef redjoin = this.dbdef.getRelDefviaName(RN1+RN2);
+		
+		typeColumn.addAll(hp1.getRelDef().getTypeColumn());
+		typeColumn.addAll(hp2.getRelDef().getTypeColumn());
+		
+		this.createRelation(relname, nbColumn, typeColumn);
+
+		for (int i = 1; i < bufferHeader1[0]; i++)
+		{	
+			//byte pagern1 = this.bm.getPage(new PageId(hp1.getRelDef().getFileIdx(), i));
+			 Vector<Record> recordshp1 = hp1.getRecordsInDataPage(new PageId(hp1.getRelDef().getFileIdx(), i));
+			
+			for(int j = 0; j < bufferHeader2[0]; j++)
+			{	
+				Vector<Record> recordshp2 = hp2.getRecordsInDataPage(new PageId(hp2.getRelDef().getFileIdx(), j));	
+				for (int ii=0; ii < bufferHeader1[i]; ii++)
+				{
+					for (int jj=0; jj < bufferHeader1[j]; jj++)
+					{
+						if(recordshp1.get(ii).getValues().get(indicecol1).equals(recordshp2.get(jj).getValues().get(indicecol2))) {
+							Vector<Object> values = new Vector<Object> ();
+							values.addAll(recordshp1.get(ii).getValues());
+							values.addAll(recordshp2.get(jj).getValues());
+							
+							Record r = new Record (redjoin);
+							
+							r.setValues(values);// a finaliser 
+							
+							vecteurjoin.add(r);
+						}
+					}
+				}
+			}		
+	     }	
+		this.displayRecords(vecteurjoin);
+		//Supprimer la relation ephemere
+	}
+	
+	
+	/**
 	 * Fonction permettant de retourner un HeapFile en connaissant son nom
 	 * @args name
 	 * @return HeapFile
@@ -317,62 +377,4 @@ public class DBManager {
 			System.out.println(it.next().toString() + ";");
 		}
 	}
-	
-	/**
-	 * Permet de cree une jointure entre 2 relations
-	 * @param RN1
-	 * @param RN2
-	 * @param indicecol1
-	 * @param indicecol2	
-	*/
-	public void join (String RN1, String RN2, int indicecol1, int indicecol2){
-		Vector<Record> vecteurjoin = new Vector <Record>(); 
-		Vector<String> typeColumn = new Vector<String>();
-		String relname = RN1+RN2;
-
-		HeapFile hp1 = getHeapFileViaName(RN1);
-		HeapFile hp2 = getHeapFileViaName(RN2);
-		
-		int nbColumn = hp1.getRelDef().getNbColumn()+hp2.getRelDef().getNbColumn();
-
-		byte [] bufferHeader1 = this.bm.getPage(new PageId (hp1.getRelDef().getFileIdx(), 0));
-		byte [] bufferHeader2 = this.bm.getPage(new PageId (hp2.getRelDef().getFileIdx(), 0));
-
-		RelDef redjoin = this.dbdef.getRelDefviaName(RN1+RN2);
-		
-		typeColumn.addAll(hp1.getRelDef().getTypeColumn());
-		typeColumn.addAll(hp2.getRelDef().getTypeColumn());
-		
-		this.createRelation(relname, nbColumn, typeColumn);
-
-		for (int i = 1; i < bufferHeader1[0]; i++)
-		{	
-			//byte pagern1 = this.bm.getPage(new PageId(hp1.getRelDef().getFileIdx(), i));
-			 Vector<Record> recordshp1 = hp1.getRecordsInDataPage(new PageId(hp1.getRelDef().getFileIdx(), i));
-			
-			for(int j = 0; j < bufferHeader2[0]; j++)
-			{	
-				Vector<Record> recordshp2 = hp2.getRecordsInDataPage(new PageId(hp2.getRelDef().getFileIdx(), j));	
-				for (int ii=0; ii < bufferHeader1[i]; ii++)
-				{
-					for (int jj=0; jj < bufferHeader1[j]; jj++)
-					{
-						if(recordshp1.get(ii).getValues().get(indicecol1).equals(recordshp2.get(jj).getValues().get(indicecol2))) {
-							Vector<Object> values= new Vector<Object> ();
-							values.addAll(recordshp1.get(ii).getValues());
-							values.addAll(recordshp2.get(jj).getValues());
-							
-							Record r = new Record (redjoin);
-							
-							r.setValues(values);// a finaliser 
-							
-							vecteurjoin.add(r);
-						}
-					}
-				}
-			}		
-	     }	
-		this.insert(RN1+RN2, vecteurjoin);
-	}
-	
 }

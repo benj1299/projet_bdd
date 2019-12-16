@@ -71,7 +71,7 @@ public class BufferManager {
 		PageId pI = this.lru.firstElement();
 		this.lru.remove(pI);
 		return pI;
-		}
+	}
 	
 	public byte[] getPageClock(PageId pageId) throws Exception {		
 		byte content[] = new byte[Constants.PAGE_SIZE];

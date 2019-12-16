@@ -2,7 +2,6 @@ package bdd;
 import java.util.*;
 
 public class RelDef {
-	
 	private String name;
 	private int nbColumn;
 	private Vector<String> typeColumn;

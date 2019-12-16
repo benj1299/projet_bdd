@@ -43,13 +43,13 @@ public class DiskManager {
     public PageId addPage(int fileIdx) throws IOException {
         File file = getFile(fileIdx);
         if(!file.exists()){
-        	throw new NullPointerException();
+        	throw new NullPointerException("Le fichier n'existe pas");
         }
-        
+               
         int fileSize = (int) file.length();
         int pageIdx = fileSize / Constants.PAGE_SIZE;
 		byte[] b = new byte[Constants.PAGE_SIZE];
-
+		
 		try {
 			RandomAccessFile randomFile = new RandomAccessFile(file, "rw");
 			randomFile.write(b, fileSize, Constants.PAGE_SIZE);
@@ -69,7 +69,7 @@ public class DiskManager {
      */
     public void readPage(PageId pageId, byte[] buff) {
       try {
-    	  RandomAccessFile file = new RandomAccessFile(getFile(pageId.getFileIdx()), "r");
+    	  RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "r");
 	      long pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
 	      file.seek(pos);
 	       
@@ -97,7 +97,7 @@ public class DiskManager {
     	}
     	try {
     		int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
-            RandomAccessFile file = new RandomAccessFile(getFile(pageId.getFileIdx()), "rw");  
+            RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "rw");  
             file.seek(pos);
             file.write(buff);  
             file.close();  
@@ -111,7 +111,7 @@ public class DiskManager {
      * @param fileIdx
      * @return le fichier de la page demandé selon son index
      */
-    private static File getFile(int fileIdx){
+    private File getFile(int fileIdx){
       File directory = new File(Constants.DB_DIRECTORY);
       if(!directory.exists()) {
     	  directory.mkdir();
