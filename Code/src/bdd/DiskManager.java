@@ -58,7 +58,6 @@ public class DiskManager {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-
         return new PageId(fileIdx, pageIdx);
     }
 

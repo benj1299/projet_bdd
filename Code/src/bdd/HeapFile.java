@@ -96,9 +96,10 @@ public class HeapFile {
 		byte[] pageBuffer = this.bm.getPage(pageId);
 		int pos = record.getRelation().getSlotCount();
 		record.writeToBuffer(pageBuffer, pos);
+		record.readFromBuffer(pageBuffer, pos);
 		this.bm.freePage(pageId, true);
-
-		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+				
+		PageId headerPage = new PageId(pageId.getFileIdx(), 0);
 		byte[] buffheader = bm.getPage(headerPage);
 		buffheader[pageId.getPageIdx()] -= 1;
 		

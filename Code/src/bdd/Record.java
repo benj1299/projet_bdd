@@ -1,8 +1,6 @@
 package bdd;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Vector;
 
 public class Record {
@@ -65,10 +63,11 @@ public class Record {
 	 * @param pos
 	 */
 	public void readFromBuffer(byte[] buff, int pos) {
-		ByteBuffer bbuf = ByteBuffer.allocate(buff.length);
+		ByteBuffer bbuf = ByteBuffer.wrap(buff);
 		if(pos < buff.length) {
 			bbuf.position(pos);
 			this.setValue(bbuf.get());
+			System.out.println(bbuf.get());
 		} else {
 			System.out.println("Une erreur s'est produite : la position d'écriture du buffer est supérieur à sa taille");
 		}
