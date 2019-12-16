@@ -1,6 +1,8 @@
 package bdd;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class Record {
@@ -55,24 +57,54 @@ public class Record {
 			System.out.println("Une erreur s'est produite : la position d'écriture du buffer est supérieur à sa taille");
 		}
 	}
-
-
 	/**
-	 * Lit les valeurs du Record depuis le buffer, l’une après l’autre, à partir d'une position.
+	 * Lit les valeurs du Record depuis le buffer, l’une après l’autre, à partir de position.
 	 * @param buff
 	 * @param pos
-	 */
+	 */	
 	public void readFromBuffer(byte[] buff, int pos) {
-		ByteBuffer bbuf = ByteBuffer.wrap(buff);
-		if(pos < buff.length) {
-			bbuf.position(pos);
-			this.setValue(bbuf.get());
-			System.out.println(bbuf.get());
-		} else {
-			System.out.println("Une erreur s'est produite : la position d'écriture du buffer est supérieur à sa taille");
-		}
-	}
 
+		ByteBuffer bbuf = ByteBuffer.wrap(buff);
+
+		bbuf.position(pos);
+
+
+		for(int i=0; i<relation.getNbColumn(); i++){
+
+			String v = (String) relation.getTypeColumn().get(i);
+
+			switch (v)
+			{
+
+			case "int":
+
+				this.values.add(bbuf.getInt());
+
+
+				break;
+
+
+			case "float":
+
+
+				this.values.add(bbuf.getFloat());
+
+
+			default :
+				if(v instanceof String && v.toLowerCase().substring(0, 5).equals("string")) 
+				{
+					int tall = Character.getNumericValue(v.charAt(6));
+
+					for (int j = 0; j < tall ; j++)
+					{
+						char charVar = bbuf.getChar();
+						this.values.add(charVar);
+					}
+				}	
+			}
+
+		}
+	
 	/**
 	 * @return the relation
 	 */
