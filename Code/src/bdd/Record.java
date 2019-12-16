@@ -15,28 +15,69 @@ public class Record {
 		this.relation = relation;
 	}
 	
-	/**
+		/**
 	 * Ecrit les valeurs du Record dans le buffer, l’une après l’autre, à partir de position.
 	 * @param buff
 	 * @param pos
-	 * @throws Exception 
 	 */
-	public void writeToBuffer(byte[] buff, int pos) throws Exception {
-	    ByteBuffer bbuf = ByteBuffer.allocate(buff.length);
-	    if(pos < buff.length) {
-	    	bbuf.position(pos);
-		    try {
-			    bbuf.put(buff);
-			    bbuf.rewind();
-		    }
-		    catch (BufferOverflowException e) { 
-	            e.printStackTrace();
-	        } 
+	public void writeToBuffer(byte[] buff, int pos) {
+
+		
+			ByteBuffer bbuf = ByteBuffer.wrap(buff);
+			if(pos < buff.length) {
+	    bbuf.position(pos);
+	    
+	    try{
+	    	
+	    
+	    for(int i=0; i<values.size(); i++){
+	    	
+	    	String v = (String) relation.getTypeColumn().get(i);
+	    	
+	    	switch (v)
+	    	{
+	    	
+	    	case "int":
+	    		bbuf.putInt((int)values.get(i));
+	    	break;
+	    	
+	    	
+	    	case "float":
+	    		
+	    		bbuf.putFloat((float)values.get(i));
+	    		
+	    		
+	    	default :
+	    		
+	    		String[] sv = v.split("");
+	    		int nbcar = Integer.parseInt(sv[6]);
+	    		
+	    		String mot = (String )values.get(i);
+	    		
+	    	
+	    		for (int j = 0; j<nbcar||j<mot.length(); j++){
+	    			
+	    			char charVar = mot.charAt(j);
+	    			bbuf.putChar(charVar);
+	    			
+	    		}
+	    		
+	    	}
+	    		
+	    	buff = new byte[bbuf.remaining()];
 	    }
-	    else {
-	    	System.out.println("Une erreur s'est produite : la position d'écriture du buffer est supérieur à sa taille");
+	    
 	    }
-	}
+	    	
+	    catch (BufferOverflowException e) { 
+            e.printStackTrace();
+        } 
+    }
+    else {
+    	System.out.println("Une erreur s'est produite : la position d'écriture du buffer est supérieur à sa taille");
+    }
+}
+
 	
 	/**
 	 * Lit les valeurs du Record depuis le buffer, l’une après l’autre, à partir d'une position.
