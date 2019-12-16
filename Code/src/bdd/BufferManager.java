@@ -30,7 +30,7 @@ public class BufferManager {
 	 * @return un des buffers associés à une case
 	 * @throws Exception 
 	 */
-	public byte[] getPage(PageId pageId) {
+	public byte[] getPage(PageId pageId) throws Exception {
 		byte content[] = new byte[Constants.PAGE_SIZE];
 
 		for(Frame x : this.bufferPool)
@@ -44,6 +44,7 @@ public class BufferManager {
 			Frame frame = new Frame(content, pageId);
 			frame.increment();
 			this.bufferPool.add(frame);
+			
 			return frame.getBuff();			
 		}
 		PageId pI = this.lRU();
@@ -64,13 +65,22 @@ public class BufferManager {
 	 * politique de remplacement des Frames dans le bufferpool
 	 * @return
 	 */
-	public PageId lRU() {
+	public PageId lRU() throws Exception {
 		if(this.lru.isEmpty()) {
 			return null;
 		}
 		PageId pI = this.lru.firstElement();
 		this.lru.remove(pI);
+
+		for(Frame x : this.bufferPool) {
+			if(x.getPageId().equals(pI)) {
+				if(x.isDirty()) {
+					this.dkManager.writePage(x.getPageId(),x.getBuff() );
+				}
+			}
+		}
 		return pI;
+		
 	}
 	
 	public byte[] getPageClock(PageId pageId) throws Exception {		
