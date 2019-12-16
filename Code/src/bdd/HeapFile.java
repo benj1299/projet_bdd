@@ -1,9 +1,6 @@
 package bdd;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Vector;
 
 public class HeapFile {
@@ -117,15 +114,12 @@ public class HeapFile {
 	public Vector<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
 		Vector<Record> records = new Vector<Record>();
 		byte[] bufferPage = this.bm.getPage(pageId);
-		
-		for(byte buff : bufferPage) {
-			if(buff == 1) {
-				Record record = new Record(this.relDef);
-			}
-		}
+		int pos = 0;
 		
 		for(int i = 0; i < this.relDef.getSlotCount(); i++) {
-			records.add(new Record(this.relDef));
+			Record rd = new Record(this.relDef);
+			rd.readFromBuffer(bufferPage, pos);
+			records.add(rd);
 		}
 		
 		return records;

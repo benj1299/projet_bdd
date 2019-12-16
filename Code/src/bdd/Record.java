@@ -24,7 +24,7 @@ public class Record {
 		if(pos < buff.length) {
 			bbuf.position(pos);
 			try{
-				for(int i = 0; i < this.values.size(); i++){
+				for(int i = 0; i < this.relation.getRecordSize(); i++){
 					String v = (String) this.relation.getTypeColumn().get(i);
 					switch (v.toLowerCase()) {
 					case "int":
