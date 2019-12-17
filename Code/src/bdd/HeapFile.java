@@ -104,7 +104,7 @@ public class HeapFile {
 		int indiceSlot = 0;	
 		byte[] buffRecord = new byte[this.getRelDef().getRecordSize()];
 		
-		PageId headerPage = new PageId(pageId.getFileIdx(), 0);
+		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 		byte[] buffHeader = bm.getPage(headerPage);
 		ByteBuffer bbHeader = ByteBuffer.wrap(buffHeader);
 		
