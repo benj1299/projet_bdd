@@ -28,11 +28,13 @@ public class Record {
 					String v = (String) this.relation.getTypeColumn().get(i);
 					switch (v.toLowerCase()) {
 					case "int":
-						bbuf.putInt(Integer.parseInt((String) this.values.get(i)));
+						int val = Integer.parseInt((String) this.values.get(i));
+						bbuf.putInt(val);
 						break;
 
 					case "float":
-						bbuf.putFloat(Float.parseFloat((String) this.values.get(i)));
+						float b = Float.parseFloat((String) this.values.get(i));
+						bbuf.putFloat(b);
 
 					default :
 						if(v instanceof String && v.toLowerCase().substring(0, 5).equals("string")) 

@@ -109,10 +109,8 @@ public class HeapFile {
 		byte[] pageBuffer = this.bm.getPage(pageId);
 		ByteBuffer bb = ByteBuffer.wrap(pageBuffer);
 		
-		int nbslotoccuper =relDef.slotCount- (int)bbHeader.get(pageId.getPageIdx());
+		int nbslotoccuper = this.relDef.getSlotCount() - bbHeader.getInt(pageId.getPageIdx());
 		int pos = nbslotoccuper*relDef.getRecordSize();
-		
-		
 		
 		record.writeToBuffer(pageBuffer,  pos);
 		
