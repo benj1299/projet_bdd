@@ -98,10 +98,16 @@ public class DiskManager {
     		throw new Exception("Longueur du buffer superieur a la longueur maximum autorise");
     	}
     	try {
-    		int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
             RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "rw");  
-            file.seek(pos);
-            file.write(buff);
+    		int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
+    		
+            if (pageId.getPageIdx() == 0) {
+				file.write(buff, 0, Constants.PAGE_SIZE);
+			}
+            else {
+	            file.seek(pos);
+	            file.write(buff);
+			}
             file.close();  
     	} 
     	catch(IOException e) {

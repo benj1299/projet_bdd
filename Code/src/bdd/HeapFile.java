@@ -40,13 +40,13 @@ public class HeapFile {
 	 * @throws IOException
 	 */
 	public PageId addDataPage() throws IOException {
-		byte[] buff = null;
 		PageId newPid = this.dm.addPage(relDef.getFileIdx());
-		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 
 		try {
-			buff = this.bm.getPage(headerPage);
+			PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+			byte[] buff = this.bm.getPage(headerPage);
 			ByteBuffer bbBuff = ByteBuffer.wrap(buff);
+			
 			bbBuff.putInt(0, bbBuff.getInt(0) + 1);
 			bbBuff.putInt(4 * (newPid.getPageIdx() - 1), this.relDef.getSlotCount());
 			
