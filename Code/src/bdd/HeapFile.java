@@ -74,7 +74,7 @@ public class HeapFile {
 			if(pageCount == 0) return this.addDataPage();
 						
 			for(int i = 1; i <= pageCount; i++) {				
-				if (bb.getInt(i)>0) {
+				if (bb.getInt(i) > 0) {
 					this.bm.freePage(headerPage, false);
 					return new PageId(this.relDef.getFileIdx(), i);
 				}
@@ -100,23 +100,39 @@ public class HeapFile {
 	 * @return record Id
 	 * @throws Exception 
 	 */
-	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception{
-		int pos = record.getRelation().getSlotCount();
-		byte[] pageBuffer = this.bm.getPage(pageId);
+	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception {
+		int indiceSlot = 0;	
+		byte[] buffRecord = new byte[this.getRelDef().getRecordSize()];
 		
-		record.writeToBuffer(pageBuffer, pos);
-		record.readFromBuffer(pageBuffer, pos);
-		this.bm.freePage(pageId, true);
-				
 		PageId headerPage = new PageId(pageId.getFileIdx(), 0);
 		byte[] buffHeader = bm.getPage(headerPage);
-		ByteBuffer bb = ByteBuffer.wrap(buffHeader);
-		if(bb.getInt(0) <= 0) throw new Exception("Impossible d'écrire sur cette page car le slotCount est à 0");
-		bb.putInt(0, bb.getInt(0) - 1);
+		ByteBuffer bbHeader = ByteBuffer.wrap(buffHeader);
 		
-		Rid rid = new Rid(pageId, pageBuffer.length);
+		byte[] pageBuffer = this.bm.getPage(pageId);
+		ByteBuffer bb = ByteBuffer.wrap(pageBuffer);
+		
+		for(int i = 0; i < this.getRelDef().getSlotCount(); i++) {
+			if (bbHeader.get(i) == 0) {
+				record.writeToBuffer(buffRecord, 0);
+
+				indiceSlot = (this.getRelDef().getSlotCount()) + i * this.getRelDef().getRecordSize();
+				bbHeader.put(i, (byte) 1);
+				bbHeader.position(indiceSlot);
+				bbHeader.put(buffRecord);
+	
+				this.dm.writePage(pageId, pageBuffer);
+				this.bm.freePage(pageId, true);
+				break;
+			}
+
+		}
+		
+		bbHeader.putInt(0, bb.getInt(0) - 1);
+		this.dm.writePage(headerPage, buffRecord);
+		this.bm.freePage(headerPage, true);
+
+		Rid rid = new Rid(pageId, indiceSlot);
 		record.setRid(rid);
-		
 		return rid;
 	}
 
