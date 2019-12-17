@@ -32,6 +32,7 @@ public class BufferManager {
 	 */
 	public byte[] getPage(PageId pageId) throws Exception {
 		byte content[] = new byte[Constants.PAGE_SIZE];
+		Frame suppr = null;
 
 		for(Frame x : this.bufferPool)
 			if(x.getPageId().equals(pageId)) {
@@ -50,14 +51,15 @@ public class BufferManager {
 		PageId pI = this.lRU();
 		for(Frame x : this.bufferPool) {
 			if(x.getPageId().equals(pI)) {
-				this.bufferPool.remove(x);
-				this.dkManager.readPage(pageId, content);
-				Frame newFrame = new Frame(content, pageId);
-				newFrame.increment();
-				this.bufferPool.add(newFrame);
-				content = newFrame.getBuff();
+				suppr = x;
 			}
 		}
+		this.bufferPool.remove(suppr);
+		this.dkManager.readPage(pageId, content);
+		Frame newFrame = new Frame(content, pageId);
+		newFrame.increment();
+		this.bufferPool.add(newFrame);
+		content = newFrame.getBuff();
 		return content;
 	}
 	
