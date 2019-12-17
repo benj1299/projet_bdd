@@ -19,9 +19,9 @@ public class HeapFile {
 
 	/**
 	 *  Création du fichier disque correspondant au HeapFile et rajoute une Header Page « vide » à ce fichier.
-	 *  @throws IOException
+	 * @throws Exception 
 	 */
-	public void createNewOnDisk() throws IOException{
+	public void createNewOnDisk() throws Exception{
 		this.dm.createFile(relDef.getFileIdx());
 		PageId headerPage = this.dm.addPage(relDef.getFileIdx());
 		byte[] buff = null;
@@ -37,9 +37,9 @@ public class HeapFile {
 
 	/**
 	 * Rajoute une page au fichier Disk correspondant et actualise les infos de la headerPage
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public PageId addDataPage() throws IOException {
+	public PageId addDataPage() throws Exception {
 		PageId newPid = this.dm.addPage(relDef.getFileIdx());
 
 		try {
@@ -115,7 +115,7 @@ public class HeapFile {
 			if (bbHeader.get(i) == 0) {
 				record.writeToBuffer(buffRecord, 0);
 
-				indiceSlot = this.getRelDef().getSlotCount()) + i * this.getRelDef().getRecordSize();
+				indiceSlot = this.getRelDef().getSlotCount() + i * this.getRelDef().getRecordSize();
 				bbHeader.put(i, (byte) 1);
 				bbHeader.position(indiceSlot);
 				bbHeader.put(buffRecord);

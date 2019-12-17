@@ -5,7 +5,7 @@ import bdd.*;
 public class Launcher {
 	
 	public static void main(String[] args) throws Exception {
-		
+		System.out.println("Projet BDD");
 		boolean inProgress = true;
 		DBManager dbmanager = DBManager.getInstance();
 		Scanner scan = new Scanner(System.in);
@@ -17,6 +17,7 @@ public class Launcher {
 		
 		while(inProgress) 
 		{
+			System.out.print("Entrer une commande : ");
 			inProgress = dbmanager.processCommand(scan.next());
 		}
 		

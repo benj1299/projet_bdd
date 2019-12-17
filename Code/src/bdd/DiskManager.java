@@ -44,9 +44,9 @@ public class DiskManager {
      * Rajoute une page au fichier spécifié par fileIdx et renvoie la nouvelle page ajoutée
      * @param fileIdx - Identifiant / indice du fichier
      * @return PageId
-     * @throws IOException 
+     * @throws Exception 
      */
-    public PageId addPage(int fileIdx) throws IOException {
+    public PageId addPage(int fileIdx) throws Exception {
         File file = getFile(fileIdx);
 		PageId p = null;
         
@@ -55,16 +55,11 @@ public class DiskManager {
         }
         
 		try {
-			RandomAccessFile randomFile = new RandomAccessFile(file, "rw");
 			byte[] buff = new byte[Constants.PAGE_SIZE];
-			int pageCount = nbPage.get(fileIdx);
-			
-			nbPage.put(fileIdx, pageCount + 1);
-        	p = new PageId(fileIdx, pageCount + 1);
-        	
-        	randomFile.seek(Constants.PAGE_SIZE * p.getPageIdx());
-        	randomFile.write(buff);
-			randomFile.close();
+			int finalPageCount = nbPage.get(fileIdx) + 1;
+        	p = new PageId(fileIdx, finalPageCount);
+			this.writePage(p, buff);
+			nbPage.put(fileIdx, finalPageCount);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Une erreur est survenue lors de l'ajout de la page");
@@ -109,15 +104,8 @@ public class DiskManager {
     	}
     	try {
             RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "rw");  
-    		int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
-    		
-            if (pageId.getPageIdx() == 0) {
-				file.write(buff, 0, Constants.PAGE_SIZE);
-			}
-            else {
-	            file.seek(pos);
-	            file.write(buff);
-			}
+    		int pos = (pageId.getPageIdx() * Constants.PAGE_SIZE) - Constants.PAGE_SIZE;
+	        file.write(buff, pos, Constants.PAGE_SIZE);
             file.close();  
     	} 
     	catch(IOException e) {

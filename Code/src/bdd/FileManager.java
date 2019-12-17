@@ -43,9 +43,9 @@ public class FileManager {
 	/**
 	 * Créé le HeapFile de la relation donnée en paramètre
 	 * @param RelDef relDef
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public void createRelationFile(RelDef relDef) throws IOException{
+	public void createRelationFile(RelDef relDef) throws Exception{
 		HeapFile hp = new HeapFile(relDef);		
 		this.heapFiles.add(hp);
 		this.heapFiles.lastElement().createNewOnDisk();

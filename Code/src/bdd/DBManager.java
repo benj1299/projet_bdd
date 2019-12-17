@@ -121,9 +121,9 @@ public class DBManager {
 	 * @param typeColumns - Tableau de tous les types de colonnes
 	 * 
 	 * @return void
-	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public void createRelation(String name, int nbColumn, Vector<String> typeColumn) throws IOException{
+	public void createRelation(String name, int nbColumn, Vector<String> typeColumn) throws Exception{
 		int recordSize = 0;
 		String typeColumnValue = null;
 		
