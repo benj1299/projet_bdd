@@ -146,6 +146,7 @@ public class HeapFile {
 		byte[] bufferPage = this.bm.getPage(pageId);
 		ByteBuffer bb = ByteBuffer.wrap(bufferPage);
 		int pos = 0;
+		int notEmptySlot = this.relDef.getSlotCount();
 		
 		for(int i = 0; i < notEmptySlot; i++) {
 			Record rd = new Record(this.relDef);
