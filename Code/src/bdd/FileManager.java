@@ -82,11 +82,11 @@ public class FileManager {
 	 */
 	public Vector<Record> selectAllFromRelation(String relName) throws Exception {
 		for(HeapFile heapFile : this.heapFiles) {
-			if(heapFile.getRelDef().getName() == relName) {
+			if(heapFile.getRelDef().getName().contentEquals(relName)) {
 				return heapFile.getAllRecords();
 			}
 		}
-		throw new Exception("relation pas trouvé dans heapFiles de FileManager");
+		throw new Exception("La relation n'a été pas trouvé dans la liste de heapFiles de FileManager");
 	}
 
 

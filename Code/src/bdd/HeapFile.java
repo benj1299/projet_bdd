@@ -66,7 +66,6 @@ public class HeapFile {
 	 */
 	public PageId getFreeDataPageId() throws Exception {		
 		try {
-			PageId p = null;
 			PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 			byte[] buffHeader = this.bm.getPage(headerPage);
 			ByteBuffer bb = ByteBuffer.wrap(buffHeader);
@@ -74,13 +73,15 @@ public class HeapFile {
 			
 			if(pageCount == 0) return this.addDataPage();
 						
-			for(int i = 1; i <= pageCount; i++) {
-				p = new PageId(this.relDef.getFileIdx(), i);
-				if (bb.getInt(i)>0) return  new pid(relDef.getFileIdx(), i);
-				else return this.addDataPage();
-				
-				
-				
+			for(int i = 1; i <= pageCount; i++) {				
+				if (bb.getInt(i)>0) {
+					this.bm.freePage(headerPage, false);
+					return new PageId(this.relDef.getFileIdx(), i);
+				}
+				else {
+					this.bm.freePage(headerPage, false);
+					return this.addDataPage();
+				}
 			}
 			
 			this.bm.freePage(headerPage, false);
@@ -100,15 +101,18 @@ public class HeapFile {
 	 * @throws Exception 
 	 */
 	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception{
-		byte[] pageBuffer = this.bm.getPage(pageId);
 		int pos = record.getRelation().getSlotCount();
+		byte[] pageBuffer = this.bm.getPage(pageId);
+		
 		record.writeToBuffer(pageBuffer, pos);
 		record.readFromBuffer(pageBuffer, pos);
 		this.bm.freePage(pageId, true);
 				
 		PageId headerPage = new PageId(pageId.getFileIdx(), 0);
-		byte[] buffheader = bm.getPage(headerPage);
-		buffheader[pageId.getPageIdx()] -= 1;
+		byte[] buffHeader = bm.getPage(headerPage);
+		ByteBuffer bb = ByteBuffer.wrap(buffHeader);
+		if(bb.getInt(0) <= 0) throw new Exception("Impossible d'écrire sur cette page car le slotCount est à 0");
+		bb.putInt(0, bb.getInt(0) - 1);
 		
 		Rid rid = new Rid(pageId, pageBuffer.length);
 		record.setRid(rid);
@@ -124,8 +128,8 @@ public class HeapFile {
 	public Vector<Record> getRecordsInDataPage(PageId pageId) throws Exception{	
 		Vector<Record> records = new Vector<Record>();
 		byte[] bufferPage = this.bm.getPage(pageId);
+		ByteBuffer bb = ByteBuffer.wrap(bufferPage);
 		int pos = 0;
-		int notEmptySlot = this.relDef.getMaxSlotCount() - this.relDef.getSlotCount();
 		
 		for(int i = 0; i < notEmptySlot; i++) {
 			Record rd = new Record(this.relDef);

@@ -375,7 +375,7 @@ public class DBManager {
 	}
 	
 	/**
-	 * Supprime le contenu d'un dossier
+	 * Fonction récursive supprimant le contenu d'un dossier
 	 * @param directoryToBeDeleted
 	 */
 	private boolean deleteDirectory(File directoryToBeDeleted) {
