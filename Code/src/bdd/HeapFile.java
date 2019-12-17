@@ -115,7 +115,7 @@ public class HeapFile {
 			if (bbHeader.get(i) == 0) {
 				record.writeToBuffer(buffRecord, 0);
 
-				indiceSlot = (this.getRelDef().getSlotCount()) + i * this.getRelDef().getRecordSize();
+				indiceSlot = this.getRelDef().getSlotCount()) + i * this.getRelDef().getRecordSize();
 				bbHeader.put(i, (byte) 1);
 				bbHeader.position(indiceSlot);
 				bbHeader.put(buffRecord);
