@@ -63,14 +63,15 @@ public class HeapFile {
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {
+		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 		try {
-			PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
-			byte[] buffHeader = this.bm.getPage(headerPage);
+			ByteBuffer[] buffHeader = this.bm.getPage(headerPage);
+			int countPage = buffHeader.getInt();
 			
 			for(int i = 1; i < buffHeader.length; i++) {
-				if((int) buffHeader[i] > 0) {
+				if(buffHeader.getInt(i*4))> 0) {
 					this.bm.freePage(headerPage, false);
-					return new PageId(this.relDef.getFileIdx(), i);
+					return new PageId(this.relDef.getFileIdx(), i + 1);
 				}
 			}
 			this.bm.freePage(headerPage, false);
