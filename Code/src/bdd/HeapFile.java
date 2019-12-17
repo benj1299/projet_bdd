@@ -48,7 +48,7 @@ public class HeapFile {
 			ByteBuffer bbBuff = ByteBuffer.wrap(buff);
 			
 			bbBuff.putInt(0, bbBuff.getInt(0) + 1);
-			bbBuff.putInt(4 * (newPid.getPageIdx() - 1), this.relDef.getSlotCount());
+			bbBuff.putInt(newPid.getPageIdx(), this.relDef.getSlotCount());
 			
 			this.dm.writePage(headerPage, buff);
 			this.bm.freePage(headerPage, true);
@@ -70,8 +70,10 @@ public class HeapFile {
 			byte[] buffHeader = this.bm.getPage(headerPage);
 			ByteBuffer bb = ByteBuffer.wrap(buffHeader);
 			int pageCount = bb.getInt(0);
-			
-			for(int i = 1; i < pageCount; i++) {
+			bb.position(4);
+			System.out.println(pageCount);
+
+			for(int i = 1; i <= pageCount; i++) {
 				if(bb.getInt(i*4) > 0) {
 					this.bm.freePage(headerPage, false);
 					return new PageId(this.relDef.getFileIdx(), i + 1);
@@ -82,7 +84,8 @@ public class HeapFile {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		throw new Exception ("Il n'y a pas de renvoie de page avec getFreeDataPage");
+		
+		return null;
 	}
 
 	/**
@@ -138,6 +141,7 @@ public class HeapFile {
 	 */
 	public Rid insertRecord(Record record) throws Exception {
 		PageId pid = this.getFreeDataPageId();
+		if(pid == null) throw new Exception ("Il n'y a pas de renvoie de page avec getFreeDataPage");
 		return this.writeRecordToDataPage(record, pid);	
 	}
 

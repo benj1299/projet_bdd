@@ -44,23 +44,34 @@ public class DiskManager {
      */
     public PageId addPage(int fileIdx) throws IOException {
         File file = getFile(fileIdx);
+		PageId p = null;
+        
         if(!file.exists()){
         	throw new NullPointerException("Le fichier n'existe pas");
         }
         
-        int fileSize = (int) file.length();
-        int pageIdx = fileSize / Constants.PAGE_SIZE;
-		byte[] b = new byte[Constants.PAGE_SIZE];
-		
 		try {
 			RandomAccessFile randomFile = new RandomAccessFile(file, "rw");
-			randomFile.write(b, fileSize, Constants.PAGE_SIZE);
-			// Créer les metadonnées correspondantes
-			// Ajouter au ficher la page avec les metadonnées
+			byte[] buff = new byte[Constants.PAGE_SIZE];
+			int fileSize = (int) file.length();
+	        int nbMaxPageDispo = fileSize / Constants.PAGE_SIZE;
+			
+	        if(nbPageUtilise < nbPageMaxDispo) {
+	        	p = new PageId(fileIdx, compteur_page + 1);
+				// on incremente le nbr de page pour le fichier fileIdx (+1)
+	        	
+	        	randomFile.seek(Constants.PAGE_SIZE * (p.getPageIdx()-1));
+	        	randomFile.write(buff);
+				randomFile.close();
+	        }
+	        else {
+				System.out.println("trop de pages ont ete cree pour la header page!!");
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			System.out.println("Une erreur est survenue lors de l'ajout de la page");
 		}
-        return new PageId(fileIdx, pageIdx);
+        return p;
     }
 
     /**
