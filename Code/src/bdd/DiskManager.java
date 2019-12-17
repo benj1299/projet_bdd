@@ -104,8 +104,15 @@ public class DiskManager {
     	}
     	try {
             RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "rw");  
-    		int pos = (pageId.getPageIdx() * Constants.PAGE_SIZE) - Constants.PAGE_SIZE;
-	        file.write(buff, pos, Constants.PAGE_SIZE);
+    		int pos = Constants.PAGE_SIZE * pageId.getPageIdx() + Constants.PAGE_SIZE;
+    		
+    		if (pageId.getPageIdx() == 0) {
+    			file.write(buff, 0, Constants.PAGE_SIZE);
+    			} else {
+				file.seek(pos);
+				file.write(buff);
+			}
+    		
             file.close();  
     	} 
     	catch(IOException e) {
