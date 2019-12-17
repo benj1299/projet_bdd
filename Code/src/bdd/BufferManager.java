@@ -129,8 +129,7 @@ public class BufferManager {
 		
 		return content;
 	}
-
-	/**
+/**
 	 * Libère la page en décrémentant pinCount et actualise le flag dirty
 	 * @param pageId
 	 * @param valdirty
@@ -142,6 +141,7 @@ public class BufferManager {
 				x.setDirty(valdirty);
 				if(x.getPinCount() == 0) {
 					x.setRefBit(true);
+					this.lru.add(x.getPageId());
 				}
 			}
 		}
