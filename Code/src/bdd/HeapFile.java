@@ -93,7 +93,7 @@ public class HeapFile {
 		return null;
 	}
 
-	/**
+/**
 	 * É́crit un record dans la page de données identifiée par pageId, et renvoyer son Rid
 	 * @param record
 	 * @param pageId
@@ -101,40 +101,30 @@ public class HeapFile {
 	 * @throws Exception 
 	 */
 	public Rid writeRecordToDataPage(Record record, PageId pageId) throws Exception {
-		int indiceSlot = 0;	
-		byte[] buffRecord = new byte[this.getRelDef().getRecordSize()];
 		
-		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
+		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 		byte[] buffHeader = bm.getPage(headerPage);
 		ByteBuffer bbHeader = ByteBuffer.wrap(buffHeader);
 		
 		byte[] pageBuffer = this.bm.getPage(pageId);
 		ByteBuffer bb = ByteBuffer.wrap(pageBuffer);
 		
-		for(int i = 0; i < this.getRelDef().getSlotCount(); i++) {
-			if (bbHeader.get(i) == 0) {
-				record.writeToBuffer(buffRecord, 0);
-
-				indiceSlot = this.getRelDef().getSlotCount() + i * this.getRelDef().getRecordSize();
-				bbHeader.put(i, (byte) 1);
-				bbHeader.position(indiceSlot);
-				bbHeader.put(buffRecord);
-	
-				this.dm.writePage(pageId, pageBuffer);
-				this.bm.freePage(pageId, true);
-				break;
-			}
-
-		}
+		int nbslotoccuper =relDef.slotCount- (int)bbHeader.get(pageId.getPageIdx());
+		int pos = nbslotoccuper*relDef.getRecordSize();
 		
-		bbHeader.putInt(0, bb.getInt(0) - 1);
-		this.dm.writePage(headerPage, buffRecord);
+		
+		
+		record.writeToBuffer(pageBuffer,  pos);
+		
+		dm.writePage(pageId, pageBuffer );
+		this.bm.freePage(pageId, true);
 		this.bm.freePage(headerPage, true);
 
-		Rid rid = new Rid(pageId, indiceSlot);
+		Rid rid = new Rid(pageId, pos);
 		record.setRid(rid);
 		return rid;
 	}
+
 
 	/**
 	 * Récupère les records d'une page
