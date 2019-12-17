@@ -24,7 +24,7 @@ public class Record {
 		if(pos < buff.length) {
 			bbuf.position(pos);
 			try{
-				for(int i = 0; i < this.relation.getRecordSize(); i++){
+				for(int i = 0; i < (this.relation.getRecordSize() - 1); i++){
 					String v = (String) this.relation.getTypeColumn().get(i);
 					switch (v.toLowerCase()) {
 					case "int":
@@ -63,36 +63,24 @@ public class Record {
 	 * @param pos
 	 */	
 	public void readFromBuffer(byte[] buff, int pos) {
-
 		ByteBuffer bbuf = ByteBuffer.wrap(buff);
-
 		bbuf.position(pos);
-
 
 		for(int i=0; i<relation.getNbColumn(); i++){
 
 			String v = (String) relation.getTypeColumn().get(i);
 
-			switch (v)
-			{
-
+			switch (v) {
 			case "int":
-
 				this.values.add(bbuf.getInt());
-
-
 				break;
 
-
 			case "float":
-
-
 				this.values.add(bbuf.getFloat());
-
+				break;
 
 			default :
-				if(v instanceof String && v.toLowerCase().substring(0, 5).equals("string")) 
-				{
+				if(v instanceof String && v.toLowerCase().substring(0, 5).equals("string")) {
 					int tall = Character.getNumericValue(v.charAt(6));
 
 					for (int j = 0; j < tall ; j++)
@@ -104,6 +92,7 @@ public class Record {
 			}
 
 		}
+	}
 	
 	/**
 	 * @return the relation
