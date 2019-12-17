@@ -2,6 +2,7 @@ package bdd;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.Vector;
 
 public class HeapFile {
@@ -61,15 +62,17 @@ public class HeapFile {
 	/**
 	 * Identifie les pages libres du fichier
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
+	 * @throws Exception 
 	 */
-	public PageId getFreeDataPageId() {
-		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
+	public PageId getFreeDataPageId() throws Exception {		
 		try {
-			ByteBuffer[] buffHeader = this.bm.getPage(headerPage);
-			int countPage = buffHeader.getInt();
+			PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
+			byte[] buffHeader = this.bm.getPage(headerPage);
+			ByteBuffer bb = ByteBuffer.wrap(buffHeader);
+			int pageCount = bb.getInt(0);
 			
-			for(int i = 1; i < buffHeader.length; i++) {
-				if(buffHeader.getInt(i*4))> 0) {
+			for(int i = 1; i < pageCount; i++) {
+				if(bb.getInt(i*4) > 0) {
 					this.bm.freePage(headerPage, false);
 					return new PageId(this.relDef.getFileIdx(), i + 1);
 				}
@@ -79,7 +82,7 @@ public class HeapFile {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		throw new Exception ("Il n'y a pas de renvoie de page avec getFreeDataPage");
 	}
 
 	/**
