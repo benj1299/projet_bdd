@@ -5,7 +5,7 @@ import java.util.Vector;
 
 public class FileManager {
 	private static FileManager instance;
-	private ArrayList<HeapFile> heapFiles;
+	private Vector<HeapFile> heapFiles;
 	private BufferManager bm;
 
 	/**
@@ -25,7 +25,7 @@ public class FileManager {
 
 	public FileManager() {
 		this.bm = BufferManager.getInstance();
-		this.heapFiles = new ArrayList<>();
+		this.heapFiles = new Vector<HeapFile>();
 	}
 
 	/**
@@ -47,8 +47,8 @@ public class FileManager {
 	 */
 	public void createRelationFile(RelDef relDef) throws IOException{
 		HeapFile hp = new HeapFile(relDef);		
-		this.heapFiles.add(hp);	
-		this.heapFiles.get(heapFiles.size()-1).createNewOnDisk();
+		this.heapFiles.add(hp);
+		this.heapFiles.lastElement().createNewOnDisk();
 	}
 
 	/**
@@ -60,6 +60,7 @@ public class FileManager {
 
 	public Rid inserRecordInRelation(Record record, String relName) throws Exception {
 		Rid rid = null;
+		
 		for(HeapFile heapFile : this.heapFiles) {
 			if(heapFile.getRelDef().getName().equals(relName)) {
 				rid = heapFile.insertRecord(record);
@@ -149,14 +150,14 @@ public class FileManager {
 	/**
 	 * @return the heapFiles
 	 */
-	public ArrayList<HeapFile> getHeapFiles() {
+	public Vector<HeapFile> getHeapFiles() {
 		return heapFiles;
 	}
 
 	/**
 	 * @param heapFiles the heapFiles to set
 	 */
-	public void setHeapFiles(ArrayList<HeapFile> heapFiles) {
+	public void setHeapFiles(Vector<HeapFile> heapFiles) {
 		this.heapFiles = heapFiles;
 	}
 	

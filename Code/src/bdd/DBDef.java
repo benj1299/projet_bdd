@@ -78,7 +78,7 @@ public class DBDef {
 	 * @param x
 	 */
 	public void addRelation(RelDef relation) {
-		this.tabRelDef.addElement(relation);
+		this.tabRelDef.add(relation);
 		this.count++;
 	}
 

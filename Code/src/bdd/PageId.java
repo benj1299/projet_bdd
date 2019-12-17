@@ -16,4 +16,9 @@ public class PageId {
 	public int getPageIdx() {
 		return this.pageIdx;
 	}
+	
+	@Override
+	public String toString() {
+		return "file index : " + this.fileIdx + ", page index : " + this.pageIdx;
+	}
 }

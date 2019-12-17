@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 
 public class DiskManager {
 	
@@ -45,7 +47,7 @@ public class DiskManager {
         if(!file.exists()){
         	throw new NullPointerException("Le fichier n'existe pas");
         }
-               
+        
         int fileSize = (int) file.length();
         int pageIdx = fileSize / Constants.PAGE_SIZE;
 		byte[] b = new byte[Constants.PAGE_SIZE];
@@ -98,7 +100,7 @@ public class DiskManager {
     		int pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
             RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "rw");  
             file.seek(pos);
-            file.write(buff);  
+            file.write(buff);
             file.close();  
     	} 
     	catch(IOException e) {

@@ -81,14 +81,11 @@ public class DBManager {
 				break;
 				
 			case "insertall":
-				String csvFilePath = args[2];
-				this.insertAll(args[1], csvFilePath);
+				this.insertAll(args[1], args[2]);
 				break;
 				
 			case "select":
-				int idCol = Integer.parseInt(args[2]);
-				String value = args[3];
-				this.select(args[1], idCol, value);
+				this.select(args[1], Integer.parseInt(args[2]), args[3]);
 				break;
 			
 			case "selectall":
@@ -96,20 +93,14 @@ public class DBManager {
 				break;
 			
 			case "delete":
-				int idxCol = Integer.parseInt(args[2]);
-				Object valeur = args[3];
-				this.delete(args[1], idxCol, valeur);
+				this.delete(args[1], Integer.parseInt(args[2]), args[3]);
 				break;
 				
-			case "createindex":
-				int indexCol = Integer.parseInt(args[2]);
-				int order = Integer.parseInt(args[3]);				
-				this.createIndex(args[1], indexCol, order);
+			case "createindex":		
+				this.createIndex(args[1], Integer.parseInt(args[2]), Integer.parseInt(args[3]));
 				
 			case "selectindex":
-				int indexColonne = Integer.parseInt(args[2]);
-				Object valeurIndex = args[3];
-				this.selectIndex(args[1], indexColonne, valeurIndex);
+				this.selectIndex(args[1], Integer.parseInt(args[2]), args[3]);
 				
 			case "clean": 
 				this.clean();

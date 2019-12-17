@@ -1,6 +1,7 @@
 package bdd;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.Vector;
 
 public class HeapFile {
@@ -21,20 +22,16 @@ public class HeapFile {
 	 */
 	public void createNewOnDisk() throws IOException{
 		this.dm.createFile(relDef.getFileIdx());
-		PageId headerPage = this.dm.addPage(relDef.getFileIdx());	
+		PageId headerPage = this.dm.addPage(relDef.getFileIdx());
 		byte[] buff = null;
 		try {
 			buff = this.bm.getPage(headerPage);
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
-		buff[0]=0;
-		try {
 			this.dm.writePage(headerPage, buff);
-		} catch (Exception e) {
+			this.bm.freePage(headerPage, true);
+		}
+		catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.bm.freePage(headerPage, true);
 	}	
 
 	/**
@@ -42,22 +39,23 @@ public class HeapFile {
 	 * @throws IOException
 	 */
 	public PageId addDataPage() throws IOException {
-		byte[] buffHeader = null;
-		PageId pid = this.dm.addPage(relDef.getFileIdx());
+		byte[] buff = null;
+		PageId newPid = this.dm.addPage(relDef.getFileIdx());
 		PageId headerPage = new PageId(relDef.getFileIdx(), 0);
 
 		try {
-			buffHeader = this.bm.getPage(headerPage);
-			buffHeader[0]+= 1;
-			buffHeader[buffHeader.length] = (byte) this.relDef.getSlotCount();
-			this.dm.writePage(headerPage, buffHeader);
+			buff = this.bm.getPage(headerPage);
+			ByteBuffer bbBuff = ByteBuffer.wrap(buff);
+			bbBuff.putInt(0, bbBuff.getInt(0) + 1);
+			bbBuff.putInt(4 * (newPid.getPageIdx() - 1), this.relDef.getSlotCount());
+			
+			this.dm.writePage(headerPage, buff);
 			this.bm.freePage(headerPage, true);
-			this.relDef.setSlotCount(this.relDef.getSlotCount()-1);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 
-		return pid;
+		return newPid;
 	}
 
 	/**
@@ -65,9 +63,10 @@ public class HeapFile {
 	 * @return PageId d’une page de données qui a encore des cases libres sinon null
 	 */
 	public PageId getFreeDataPageId() {
-		PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 		try {
+			PageId headerPage = new PageId(this.relDef.getFileIdx(), 0);
 			byte[] buffHeader = this.bm.getPage(headerPage);
+			
 			for(int i = 1; i < buffHeader.length; i++) {
 				if((int) buffHeader[i] > 0) {
 					this.bm.freePage(headerPage, false);
@@ -134,7 +133,7 @@ public class HeapFile {
 	 * @throws Exception 
 	 */
 	public Rid insertRecord(Record record) throws Exception {
-		PageId pid = getFreeDataPageId();
+		PageId pid = this.getFreeDataPageId();
 		return this.writeRecordToDataPage(record, pid);	
 	}
 
