@@ -8,12 +8,10 @@ public class RelDef {
 	private int fileIdx;
 	private int recordSize;
 	private int slotCount;
-	private int maxSlotCount;
 	
-	public RelDef(String name, int nbColumn, Vector<String> typeColumn, int recordSize, int fileIdx) {
+	public RelDef(String name, int nbColumn, Vector<String> typeColumn, int recordSize, int fileIdx, int slotCount) {
 		this.fileIdx = fileIdx;
-		this.slotCount = Constants.PAGE_SIZE/recordSize;
-		this.maxSlotCount = Constants.PAGE_SIZE/recordSize;
+		this.slotCount = slotCount;
 		this.name = name;
 		this.nbColumn = nbColumn;
 		this.typeColumn = typeColumn;
@@ -97,19 +95,5 @@ public class RelDef {
 	 */
 	public void setSlotCount(int slotCount) {
 		this.slotCount = slotCount;
-	}
-
-	/**
-	 * @return the maxSlotCount
-	 */
-	public int getMaxSlotCount() {
-		return maxSlotCount;
-	}
-
-	/**
-	 * @param maxSlotCount the maxSlotCount to set
-	 */
-	public void setMaxSlotCount(int maxSlotCount) {
-		this.maxSlotCount = maxSlotCount;
 	}
 }

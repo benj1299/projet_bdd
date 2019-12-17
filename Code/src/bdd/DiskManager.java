@@ -72,6 +72,7 @@ public class DiskManager {
       try {
     	  RandomAccessFile file = new RandomAccessFile(this.getFile(pageId.getFileIdx()), "r");
 	      long pos = pageId.getPageIdx() * Constants.PAGE_SIZE;
+
 	      file.seek(pos);
 	       
 	      for(int i = 0; i < Constants.PAGE_SIZE; i++){

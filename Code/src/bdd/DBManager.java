@@ -136,8 +136,9 @@ public class DBManager {
 				int tall = Character.getNumericValue(typeColumnValue.charAt(6));
 				recordSize += tall*2;	
 			}
-			
-		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount());		
+		
+		int slotCount = Constants.PAGE_SIZE/recordSize;
+		RelDef relation = new RelDef(name, nbColumn, typeColumn, recordSize, this.dbdef.getCount(), slotCount);
 		this.dbdef.addRelation(relation);
 		this.fm.createRelationFile(relation);
 	}
