@@ -1,8 +1,8 @@
-package bdd;
 import java.io.IOException;
-import java.util.Scanner; 
+import java.util.Scanner;
+import bdd.*; 
 
-public class SGBD {
+public class Launcher {
 	
 	public static void main(String[] args) throws Exception {
 		
