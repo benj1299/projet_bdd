@@ -152,7 +152,12 @@ public class DBManager {
 		this.dbdef.reset();
 		this.fm.reset();
 	}
-	
+	/**
+	 * Insert les données envoyées en paramètre dans la base de données
+	 * @param relationName
+	 * @param values
+	 * @throws Exception
+	 */
 	public void insert(String relationName, Vector<Object> values) throws Exception {
 		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
 		RelDef currentRelation;
@@ -169,6 +174,13 @@ public class DBManager {
 		}
 	}
 	
+	/**
+	 * Affiche les données de la base selon la colone et la valeur données en paramètre
+	 * @param relationName
+	 * @param idCol
+	 * @param value
+	 * @throws Exception
+	 */
 	public void select(String relationName, int idCol, String value) throws Exception {
 		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
 		RelDef currentRelation;
@@ -183,6 +195,13 @@ public class DBManager {
 		}
 	}
 	
+	/**
+	 * Supprimer les données de la base selon l'index et la valeur données en paramètre
+	 * @param relationName
+	 * @param idxCol
+	 * @param valeur
+	 * @throws Exception
+	 */
 	public void delete(String relationName, int idxCol, Object valeur) throws Exception {
 		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
 		RelDef currentRelation;
@@ -200,6 +219,12 @@ public class DBManager {
 		}
 	}
 	
+	/**
+	 * Insert un ensemble de données provenant d'un csv dans la base de données
+	 * @param relationName
+	 * @param csvFilePath
+	 * @throws Exception
+	 */
 	public void insertAll(String relationName, String csvFilePath) throws Exception {
 		File csvFile = new File(csvFilePath);
 		if (csvFile.isFile()) {
@@ -222,6 +247,11 @@ public class DBManager {
 		}
 	}
 	
+	/**
+	 * Affiche toutes les données d'une relation donnée en paramètre
+	 * @param relationName
+	 * @throws Exception
+	 */
 	public void selectAll(String relationName) throws Exception {
 		Iterator<RelDef> relation = this.dbdef.getTabRelDef().iterator();
 		RelDef currentRelation;
@@ -347,7 +377,6 @@ public class DBManager {
 	/**
 	 * Supprime le contenu d'un dossier
 	 * @param directoryToBeDeleted
-	 * @return
 	 */
 	private boolean deleteDirectory(File directoryToBeDeleted) {
 	    File[] allContents = directoryToBeDeleted.listFiles();
