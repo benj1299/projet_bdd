@@ -58,25 +58,19 @@ public class DiskManager {
 		try {
 			RandomAccessFile randomFile = new RandomAccessFile(file, "rw");
 			byte[] buff = new byte[Constants.PAGE_SIZE];
-			int fileSize = (int) file.length();
-	        int nbMaxPageDispo = fileSize / Constants.PAGE_SIZE;
 			int pageCount = nbPage.get(fileIdx);
 			
-	        if(pageCount < nbMaxPageDispo) {
-				nbPage.put(fileIdx, pageCount + 1);
-	        	p = new PageId(fileIdx, pageCount + 1);
-	        	
-	        	randomFile.seek(Constants.PAGE_SIZE * (p.getPageIdx()-1));
-	        	randomFile.write(buff);
-				randomFile.close();
-	        }
-	        else {
-				System.out.println("trop de pages ont ete cree pour la header page!!");
-			}
+			nbPage.put(fileIdx, pageCount + 1);
+        	p = new PageId(fileIdx, pageCount + 1);
+        	
+        	randomFile.seek(Constants.PAGE_SIZE * (p.getPageIdx()-1));
+        	randomFile.write(buff);
+			randomFile.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			System.out.println("Une erreur est survenue lors de l'ajout de la page");
 		}
+
         return p;
     }
 

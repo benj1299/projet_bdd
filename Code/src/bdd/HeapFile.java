@@ -41,6 +41,7 @@ public class HeapFile {
 	 */
 	public PageId addDataPage() throws IOException {
 		PageId newPid = this.dm.addPage(relDef.getFileIdx());
+    	System.out.println(newPid.toString());
 
 		try {
 			PageId headerPage = new PageId(relDef.getFileIdx(), 0);
