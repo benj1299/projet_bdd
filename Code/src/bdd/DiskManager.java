@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class DiskManager {
 	
 	private static DiskManager instance ;
+	private static HashMap<Integer, Integer> nbPage = new HashMap<Integer, Integer>(); // de 1 � n
+
 		 
 	public static DiskManager getInstance() {
       if (instance == null) {
@@ -30,6 +33,8 @@ public class DiskManager {
         try {
             File file = getFile(fileIdx);
             file.createNewFile();
+			nbPage.put(fileIdx, 0);
+			
           } catch (IOException e) {
             System.out.println("Une erreur est apparue pour la création d'un fichier.");
             e.printStackTrace();
@@ -46,8 +51,8 @@ public class DiskManager {
         File file = getFile(fileIdx);
 		PageId p = null;
         
-        if(!file.exists()){
-        	throw new NullPointerException("Le fichier n'existe pas");
+        if(!file.exists() || !nbPage.containsKey(fileIdx)){
+        	throw new NullPointerException("Le fichier " + fileIdx + "n'existe pas");
         }
         
 		try {
@@ -55,10 +60,11 @@ public class DiskManager {
 			byte[] buff = new byte[Constants.PAGE_SIZE];
 			int fileSize = (int) file.length();
 	        int nbMaxPageDispo = fileSize / Constants.PAGE_SIZE;
+			int pageCount = nbPage.get(fileIdx);
 			
-	        if(nbPageUtilise < nbPageMaxDispo) {
-	        	p = new PageId(fileIdx, compteur_page + 1);
-				// on incremente le nbr de page pour le fichier fileIdx (+1)
+	        if(pageCount < nbMaxPageDispo) {
+				nbPage.put(fileIdx, pageCount + 1);
+	        	p = new PageId(fileIdx, pageCount + 1);
 	        	
 	        	randomFile.seek(Constants.PAGE_SIZE * (p.getPageIdx()-1));
 	        	randomFile.write(buff);
