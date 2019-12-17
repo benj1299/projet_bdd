@@ -10,8 +10,7 @@ import java.util.HashMap;
 public class DiskManager {
 	
 	private static DiskManager instance ;
-	private static HashMap<Integer, Integer> nbPage = new HashMap<Integer, Integer>(); // de 1 � n
-
+	private static HashMap<Integer, Integer> nbPage = new HashMap<Integer, Integer>();
 		 
 	public static DiskManager getInstance() {
       if (instance == null) {
@@ -63,7 +62,7 @@ public class DiskManager {
 			nbPage.put(fileIdx, pageCount + 1);
         	p = new PageId(fileIdx, pageCount + 1);
         	
-        	randomFile.seek(Constants.PAGE_SIZE * (p.getPageIdx()-1));
+        	randomFile.seek(Constants.PAGE_SIZE * p.getPageIdx());
         	randomFile.write(buff);
 			randomFile.close();
 		} catch (FileNotFoundException e) {

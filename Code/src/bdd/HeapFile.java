@@ -41,7 +41,6 @@ public class HeapFile {
 	 */
 	public PageId addDataPage() throws IOException {
 		PageId newPid = this.dm.addPage(relDef.getFileIdx());
-    	System.out.println(newPid.toString());
 
 		try {
 			PageId headerPage = new PageId(relDef.getFileIdx(), 0);
@@ -71,16 +70,17 @@ public class HeapFile {
 			byte[] buffHeader = this.bm.getPage(headerPage);
 			ByteBuffer bb = ByteBuffer.wrap(buffHeader);
 			int pageCount = bb.getInt(0);
-			bb.position(4);
-			System.out.println(pageCount);
-
+			
+			// Si pageCount = 0 alors faire un addDataPage() et renvoyé la page
+			
 			for(int i = 1; i <= pageCount; i++) {
-				if(bb.getInt(i*4) > 0) {
-					this.bm.freePage(headerPage, false);
-					return new PageId(this.relDef.getFileIdx(), i + 1);
-				}
+				//Vérifier que la page i à son reldef.getSlotCount > 0
+				// Si c'est le cas alors renvoyer cette page
+				// Sinon ajouter une et la renvoyer
 			}
+			
 			this.bm.freePage(headerPage, false);
+			return new PageId(this.relDef.getFileIdx(), pageCount + 1);
 
 		} catch (Exception e) {
 			e.printStackTrace();
