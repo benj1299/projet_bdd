@@ -157,7 +157,7 @@ public class Record {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i<this.values.size();i++) {
+		for(int i = 0; i < this.values.size(); i++) {
 			sb.append(this.values.get(i) + " ;");
 		}
 		return sb.toString();
