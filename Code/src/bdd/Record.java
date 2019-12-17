@@ -53,6 +53,7 @@ public class Record {
 			}
 			catch (BufferOverflowException e) { 
 				e.printStackTrace();
+				e.getMessage();
 			} 
 		}
 		else {
@@ -66,34 +67,45 @@ public class Record {
 	 */	
 	public void readFromBuffer(byte[] buff, int pos) {
 		ByteBuffer bbuf = ByteBuffer.wrap(buff);
-		bbuf.position(pos);
+		if(pos < buff.length) {
+			bbuf.position(pos);
+			try {
+				
+				for(int i = 0; i < (this.relation.getRecordSize() - 1); i++){
+					String v = (String) this.relation.getTypeColumn().get(i);
+					switch (v.toLowerCase()) {
+					case "int":
+						int a = bbuf.getInt(i);
+						this.values.add(a);
+						break;
 
-		for(int i=0; i<relation.getNbColumn(); i++){
+					case "float":
+						float b = bbuf.getFloat(i);
+						this.values.add(b);
+						break;
 
-			String v = (String) relation.getTypeColumn().get(i);
-
-			switch (v) {
-			case "int":
-				this.values.add(bbuf.getInt());
-				break;
-
-			case "float":
-				this.values.add(bbuf.getFloat());
-				break;
-
-			default :
-				if(v instanceof String && v.toLowerCase().substring(0, 5).equals("string")) {
-					int tall = Character.getNumericValue(v.charAt(6));
-
-					for (int j = 0; j < tall ; j++)
-					{
-						char charVar = bbuf.getChar();
-						this.values.add(charVar);
+					default :
+						if(v instanceof String && v.toLowerCase().substring(0, 5).equals("string")) 
+						{
+							int tall = Character.getNumericValue(v.charAt(6));
+							String mot = (String) values.get(i);
+							for (int j = 0; j < tall || j < mot.length(); j++)
+							{
+								char charVar = bbuf.getChar(j);
+								this.values.add(charVar);
+							}
+						}	
 					}
-				}	
+					buff = new byte[bbuf.remaining()];
+				}
+			} catch(Exception e) {
+				e.getMessage();
 			}
-
+		}else {
+			System.out.println("Une erreur s'est produite : la position de lecture du buffer est supérieur à sa taille");
 		}
+
+		
 	}
 	
 	/**
